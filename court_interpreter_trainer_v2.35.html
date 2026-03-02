@@ -1423,7 +1423,7 @@ function buildDiscountCTA(tier, score) {
   const check = Math.abs(hash).toString(36).slice(0, 6);
   const token = `BILINCO-T${tierNum}-${ts}-${Math.round(score)}-${check}`;
   // Build academy URL — relative path assumes same directory; adjust if hosted separately
-  const academyBase = 'Index.html';
+  const academyBase = 'https://script.google.com/macros/s/AKfycbxY40zwLQcYDFkgruwAwbkzKoU_WZCmktOVbXrwUzvr3NRPraSWmYq5W5dJrIZt9wtgFg/exec';
   const discountURL = `${academyBase}?discount=${encodeURIComponent(token)}`;
   return `<div class="rdiscount" style="margin:18px 0;padding:16px 20px;background:linear-gradient(135deg,#FFF9E8,#FFF3D0);border:1.5px solid #C8A832;border-radius:12px;text-align:center">
     <div style="font-size:1.1em;font-weight:700;color:#8B6D1F;margin-bottom:6px">🎓 Academy Discount Unlocked!</div>
