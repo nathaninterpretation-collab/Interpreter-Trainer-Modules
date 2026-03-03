@@ -4082,8 +4082,8 @@ function termRole(t) {
   const term = (t.term || '').toLowerCase();
   if (/\b(crime|criminal act|offense|offence|felony|felonious|misdemeanor|misdemeanour|illegal act|unlawful act|punishable|convicted of|guilty of|criminal charge|criminal conduct)\b/.test(def) ||
       /^the unlawful\b/.test(def)) return 'offense';
-  if (/\b(proceeding|procedure|hearing|motion|writ|petition|appeal|filing|arraignment|deposition|trial process|court process)\b/.test(def) ||
-      /\b(proceeding|hearing|motion|petition|writ|arraignment|deposition)\b/.test(term)) return 'procedure';
+  const PROC_RE = /\b(proceeding|procedure|hearing|motion|writ|petition|appeal|filing|arraignment|deposition|trial process|court process)\b/;
+  if (PROC_RE.test(def) || PROC_RE.test(term)) return 'procedure';
   if (/\b(doctrine|principle|right|privilege|immunity|theory|legal concept|rule of law)\b/.test(def)) return 'concept';
   return 'general';
 }
@@ -4138,7 +4138,19 @@ function hideAll() {
 function goHub() { killQ(); hideAll(); document.getElementById('V_hub').classList.remove('hid'); }
 function goLearn() { hideAll(); document.getElementById('V_learn').classList.remove('hid'); renderScenarios(); }
 function goQuiz() { hideAll(); document.getElementById('V_quiz').classList.remove('hid'); document.getElementById('qI').classList.remove('hid'); document.getElementById('qB').classList.add('hid'); document.getElementById('qR').classList.add('hid'); }
-function goInterp() { hideAll(); document.getElementById('V_interp').classList.remove('hid'); document.getElementById('iI').classList.remove('hid'); document.getElementById('iB').classList.add('hid'); document.getElementById('iR').classList.add('hid'); if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){navigator.mediaDevices.getUserMedia({audio:true}).catch(function(){});} }
+function goInterp() {
+  hideAll();
+  document.getElementById('V_interp').classList.remove('hid');
+  document.getElementById('iI').classList.remove('hid');
+  document.getElementById('iB').classList.add('hid');
+  document.getElementById('iR').classList.add('hid');
+  // Request mic permission immediately on entering Interpret Mode, before any audio workflow begins
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({audio:true}).catch(function() {
+      // Permission denied or unavailable — SpeechEngine.onError handles this at recording time
+    });
+  }
+}
 function endQuiz() { killQ(); goHub(); }
 function endInterp() { killQ(); goHub(); }
 
