@@ -4006,11 +4006,11 @@ const EV=[{"id":300,"term":"Abatement OF Action","simplified":"诉讼中止","tr
 /* ===== SENTENCE TEMPLATES ===== */
 const STPL = {
   Criminal: [
-    {en:"The defendant was charged with {term} under the California Penal Code.", cn:"\u88ab\u544a\u6839\u636e\u52a0\u5dde\u5211\u6cd5\u5178\u88ab\u6307\u63a7{cn}\u3002"},
+    {r:"offense",en:"The defendant was charged with {term} under the California Penal Code.", cn:"\u88ab\u544a\u6839\u636e\u52a0\u5dde\u5211\u6cd5\u5178\u88ab\u6307\u63a7{cn}\u3002"},
     {en:"The prosecution presented evidence of {term} to the jury.", cn:"\u68c0\u65b9\u5411\u966a\u5ba1\u56e2\u63d0\u4ea4\u4e86\u5173\u4e8e{cn}\u7684\u8bc1\u636e\u3002"},
-    {en:"The judge explained the elements of {term} to the jury before deliberation.", cn:"\u6cd5\u5b98\u5728\u5ba1\u8bae\u524d\u5411\u966a\u5ba1\u56e2\u89e3\u91ca\u4e86{cn}\u7684\u6784\u6210\u8981\u4ef6\u3002"},
-    {en:"Defense counsel argued that {term} had not been proven beyond a reasonable doubt.", cn:"\u8fa9\u62a4\u5f8b\u5e08\u8fa9\u79f0{cn}\u672a\u88ab\u6392\u9664\u5408\u7406\u6000\u7591\u5730\u8bc1\u660e\u3002"},
-    {en:"The court found sufficient evidence to support the charge of {term}.", cn:"\u6cd5\u9662\u8ba4\u5b9a\u6709\u5145\u5206\u8bc1\u636e\u652f\u6301{cn}\u7684\u6307\u63a7\u3002"},
+    {r:"offense",en:"The judge explained the elements of {term} to the jury before deliberation.", cn:"\u6cd5\u5b98\u5728\u5ba1\u8bae\u524d\u5411\u966a\u5ba1\u56e2\u89e3\u91ca\u4e86{cn}\u7684\u6784\u6210\u8981\u4ef6\u3002"},
+    {r:"offense",en:"Defense counsel argued that {term} had not been proven beyond a reasonable doubt.", cn:"\u8fa9\u62a4\u5f8b\u5e08\u8fa9\u79f0{cn}\u672a\u88ab\u6392\u9664\u5408\u7406\u6000\u7591\u5730\u8bc1\u660e\u3002"},
+    {r:"offense",en:"The court found sufficient evidence to support the charge of {term}.", cn:"\u6cd5\u9662\u8ba4\u5b9a\u6709\u5145\u5206\u8bc1\u636e\u652f\u6301{cn}\u7684\u6307\u63a7\u3002"},
     {en:"The witness testified about the circumstances surrounding the alleged {term}.", cn:"\u8bc1\u4eba\u5c31\u6d89\u5acc{cn}\u7684\u76f8\u5173\u60c5\u5f62\u4f5c\u4e86\u8bc1\u3002"},
   ],
   Civil: [
@@ -4052,8 +4052,9 @@ const STPL = {
     {en:"The administrative law judge issued a ruling on {term}.", cn:"\u884c\u653f\u6cd5\u6cd5\u5b98\u5c31{cn}\u4f5c\u51fa\u4e86\u88c1\u51b3\u3002"},
   ],
   'Traffic & DUI': [
-    {en:"The officer cited the driver for {term} during the traffic stop.", cn:"\u8b66\u5b98\u5728\u4ea4\u901a\u62e6\u622a\u4e2d\u5bf9\u9a7e\u9a76\u4eba\u5f00\u5177\u4e86{cn}\u7684\u7f5a\u5355\u3002"},
-    {en:"The defendant contested the charge of {term} at the arraignment.", cn:"\u88ab\u544a\u5728\u4f20\u8baf\u65f6\u5bf9{cn}\u7684\u6307\u63a7\u63d0\u51fa\u4e86\u5f02\u8bae\u3002"},
+    {r:"offense",en:"The officer cited the driver for {term} during the traffic stop.", cn:"\u8b66\u5b98\u5728\u4ea4\u901a\u62e6\u622a\u4e2d\u5bf9\u9a7e\u9a76\u4eba\u5f00\u5177\u4e86{cn}\u7684\u7f5a\u5355\u3002"},
+    {r:"offense",en:"The defendant contested the charge of {term} at the arraignment.", cn:"\u88ab\u544a\u5728\u4f20\u8baf\u65f6\u5bf9{cn}\u7684\u6307\u63a7\u63d0\u51fa\u4e86\u5f02\u8bae\u3002"},
+    {en:"The court reviewed the record of {term} during the traffic proceedings.", cn:"\u6cd5\u9662\u5728\u4ea4\u901a\u8bc9\u8bbc\u8fc7\u7a0b\u4e2d\u5ba1\u67e5\u4e86{cn}\u7684\u8bb0\u5f55\u3002"},
   ],
   Immigration: [
     {en:"The immigration judge considered the applicant's claim of {term}.", cn:"\u79fb\u6c11\u6cd5\u5b98\u5ba1\u7406\u4e86\u7533\u8bf7\u4eba\u5173\u4e8e{cn}\u7684\u8bf7\u6c42\u3002"},
@@ -4074,6 +4075,18 @@ const STPL = {
 /* Pick a sentence for a term */
 // Scenario alias map: normalize variant scenario names to STPL keys
 const SCEN_ALIAS = {'Traffic':'Traffic & DUI'};
+// Semantic role classifier: categorizes terms into roles for template filtering.
+// Returns 'offense' (chargeable crime/act), 'procedure' (court process), 'concept' (doctrine/principle), or 'general'.
+function termRole(t) {
+  const def = (t.definition || '').toLowerCase();
+  const term = (t.term || '').toLowerCase();
+  if (/\b(crime|criminal act|offense|offence|felony|felonious|misdemeanor|misdemeanour|illegal act|unlawful act|punishable|convicted of|guilty of|criminal charge|criminal conduct)\b/.test(def) ||
+      /^the unlawful\b/.test(def)) return 'offense';
+  const PROC_RE = /\b(proceeding|procedure|hearing|motion|writ|petition|appeal|filing|arraignment|deposition|trial process|court process)\b/;
+  if (PROC_RE.test(def) || PROC_RE.test(term)) return 'procedure';
+  if (/\b(doctrine|principle|right|privilege|immunity|theory|legal concept|rule of law)\b/.test(def)) return 'concept';
+  return 'general';
+}
 function getSentence(term) {
   let pool = [];
   for (const s of (term.scenarios||[])) {
@@ -4085,6 +4098,10 @@ function getSentence(term) {
     // Ultimate fallback — should never happen but prevents crash
     return { en: term.term, cn: cn(term) };
   }
+  // Semantic filtering (Wittgensteinian constraint): only use templates that fit the term's role
+  const role = termRole(term);
+  const filtered = pool.filter(tpl => !tpl.r || tpl.r === role);
+  if (filtered.length > 0) pool = filtered;
   const tpl = pool[Math.floor(Math.random() * pool.length)];
   return {
     en: tpl.en.replace(/{term}/g, term.term),
@@ -4121,7 +4138,19 @@ function hideAll() {
 function goHub() { killQ(); hideAll(); document.getElementById('V_hub').classList.remove('hid'); }
 function goLearn() { hideAll(); document.getElementById('V_learn').classList.remove('hid'); renderScenarios(); }
 function goQuiz() { hideAll(); document.getElementById('V_quiz').classList.remove('hid'); document.getElementById('qI').classList.remove('hid'); document.getElementById('qB').classList.add('hid'); document.getElementById('qR').classList.add('hid'); }
-function goInterp() { hideAll(); document.getElementById('V_interp').classList.remove('hid'); document.getElementById('iI').classList.remove('hid'); document.getElementById('iB').classList.add('hid'); document.getElementById('iR').classList.add('hid'); }
+function goInterp() {
+  hideAll();
+  document.getElementById('V_interp').classList.remove('hid');
+  document.getElementById('iI').classList.remove('hid');
+  document.getElementById('iB').classList.add('hid');
+  document.getElementById('iR').classList.add('hid');
+  // Request mic permission immediately on entering Interpret Mode, before any audio workflow begins
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({audio:true}).catch(function() {
+      // Permission denied or unavailable — SpeechEngine.onError handles this at recording time
+    });
+  }
+}
 function endQuiz() { killQ(); goHub(); }
 function endInterp() { killQ(); goHub(); }
 
@@ -7352,35 +7381,35 @@ const AAG_AUDIO = (function() {
     {tN:1,lcN:0,
      en:"Judge {judge} reminded the jury that the burden of proof for {t1} rests with the prosecution and must be established beyond a reasonable doubt.",
      cn:"{judge}法官提醒陪审团，{t1_cn}的举证责任在于检方，且必须排除合理怀疑。"},
-    {tN:1,lcN:0,
+    {tN:1,lcN:0,t1r:"offense",
      en:"The defense attorney filed a motion to dismiss the charge of {t1}, arguing that the evidence was insufficient to proceed to trial.",
      cn:"辩护律师提出动议要求撤销{t1_cn}的指控，辩称证据不足以进行审判。"},
-    {tN:1,lcN:0,
+    {tN:1,lcN:0,t1r:"offense",
      en:"Ms. {name} entered a plea of not guilty to the charge of {t1} and was released on bail pending the next hearing at the {court}.",
      cn:"{name_cn}对{t1_cn}的指控作了无罪答辩，并在{court_cn}下次听证之前获准保释。"},
     {tN:1,lcN:0,
      en:"The witness testified that she observed the incident involving {t1} on the evening of March fifteenth near the downtown area.",
      cn:"证人作证称她于三月十五日傍晚在市中心附近目睹了涉及{t1_cn}的事件。"},
-    {tN:1,lcN:0,
+    {tN:1,lcN:0,t1r:"offense",
      en:"Following the investigation, the district attorney decided to file charges of {t1} against the defendant, Mr. {name}.",
      cn:"经过调查，地区检察官决定对被告{name_cn}提起{t1_cn}的指控。"},
     {tN:1,lcN:0,
      en:"The court interpreter translated the judge's explanation of {t1} to ensure that the defendant fully understood the charges.",
      cn:"法庭口译员翻译了法官对{t1_cn}的解释，以确保被告完全理解所受指控。"},
-    {tN:1,lcN:0,
+    {tN:1,lcN:0,t1r:"offense",
      en:"Judge {judge} sentenced the defendant to three years of probation for {t1} and ordered completion of a rehabilitation program.",
      cn:"{judge}法官就{t1_cn}判处被告三年缓刑，并命令其完成一项康复计划。"},
     // ── 1 term + 1 LC ──
     {tN:1,lcN:1,
      en:"The prosecution argued that the evidence of {t1} was admissible under the principle of {lc1}, and the judge agreed after reviewing the case law.",
      cn:"检方辩称{t1_cn}的证据根据{lc1_cn}原则可以采纳，法官在审查判例法后表示同意。"},
-    {tN:1,lcN:1,
+    {tN:1,lcN:1,t1r:"offense",
      en:"Mr. {name} was informed by the court that {t1} could result in deportation, as {lc1} applies to non-citizen defendants in criminal cases.",
      cn:"法院告知{name_cn}，{t1_cn}可能导致驱逐出境，因为{lc1_cn}适用于刑事案件中的非公民被告。"},
     {tN:1,lcN:1,
      en:"During the preliminary hearing, the magistrate found probable cause for {t1} and noted that {lc1} was relevant to the defendant's rights.",
      cn:"在预审听证中，治安法官认定{t1_cn}存在合理根据，并指出{lc1_cn}与被告权利相关。"},
-    {tN:1,lcN:1,
+    {tN:1,lcN:1,t1r:"offense",
      en:"The appellate court reversed the conviction for {t1}, holding that {lc1} had been violated during the original trial proceedings.",
      cn:"上诉法院推翻了{t1_cn}的定罪，裁定在原审程序中{lc1_cn}遭到了违反。"},
     {tN:1,lcN:1,
@@ -7392,14 +7421,14 @@ const AAG_AUDIO = (function() {
     {tN:1,lcN:1,
      en:"The defendant's attorney at the {court} requested a continuance in the case involving {t1}, citing the need to research {lc1} more thoroughly.",
      cn:"被告的律师在{court_cn}请求延期审理涉及{t1_cn}的案件，理由是需要更深入地研究{lc1_cn}。"},
-    {tN:1,lcN:1,
+    {tN:1,lcN:1,t1r:"offense",
      en:"After considering the testimony, the court ruled that {t1} was established and that {lc1} did not provide grounds for acquittal.",
      cn:"在考虑证词后，法院裁定{t1_cn}已被确立，且{lc1_cn}不构成无罪释放的理由。"},
     // ── 2 terms + 0 LC ──
-    {tN:2,lcN:0,
+    {tN:2,lcN:0,t1r:"offense",t2r:"offense",
      en:"Mr. {name} appeared at the {court} on charges of {t1} and {t2}. The judge set bail at fifty thousand dollars and scheduled a preliminary hearing.",
      cn:"{name_cn}因{t1_cn}和{t2_cn}的指控在{court_cn}出庭。法官将保释金定为五万美元，并安排了预审听证。"},
-    {tN:2,lcN:0,
+    {tN:2,lcN:0,t1r:"offense",t2r:"offense",
      en:"The district attorney offered a plea deal that would reduce the charge of {t1} to {t2}, provided the defendant agrees to cooperate with the ongoing investigation.",
      cn:"地区检察官提出认罪协议，将{t1_cn}的指控减为{t2_cn}，条件是被告同意配合正在进行的调查。"},
     {tN:2,lcN:0,
@@ -7412,7 +7441,7 @@ const AAG_AUDIO = (function() {
     {tN:2,lcN:1,
      en:"The defense filed a motion arguing that {lc1} required the court to suppress evidence of both {t1} and {t2} obtained during the search.",
      cn:"辩方提出动议，辩称{lc1_cn}要求法院排除在搜查中获得的{t1_cn}和{t2_cn}的证据。"},
-    {tN:2,lcN:1,
+    {tN:2,lcN:1,t1r:"offense",t2r:"offense",
      en:"In the case of {name} at the {court}, the judge considered the charges of {t1} and {t2} in light of {lc1} before issuing the ruling.",
      cn:"在{court_cn}审理{name_cn}一案时，法官在作出裁决前根据{lc1_cn}审议了{t1_cn}和{t2_cn}的指控。"},
     {tN:2,lcN:1,
@@ -7448,9 +7477,15 @@ const AAG_AUDIO = (function() {
 
   // Build compound sentence from multiple terms + LC concepts
   function buildCompoundSentence(tTerms, lcTerms) {
-    // Find compatible templates
+    // Find compatible templates — must have enough slots AND match semantic roles
+    var role0 = tTerms.length > 0 ? termRole(tTerms[0]) : 'general';
+    var role1 = tTerms.length > 1 ? termRole(tTerms[1]) : 'general';
     var compatible = MTPL.filter(function(tpl) {
-      return tpl.tN <= tTerms.length && tpl.lcN <= lcTerms.length;
+      if (tpl.tN > tTerms.length || tpl.lcN > lcTerms.length) return false;
+      // Enforce semantic role constraints on term slots (Wittgensteinian constraint)
+      if (tpl.t1r && tpl.t1r !== role0) return false;
+      if (tpl.t2r && tpl.t2r !== role1) return false;
+      return true;
     });
     if (compatible.length === 0) {
       // Fallback to single-term simple sentence
