@@ -30,22 +30,22 @@ header h1{font-size:1.5em;font-weight:700;display:flex;align-items:center;justif
 header .sub{color:var(--tx3);font-size:0.78em;margin-top:4px}
 
 /* === CONFIG BAR (collapsible inline) === */
-.cfg-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);cursor:pointer;margin:0 auto 0;max-width:580px;transition:all 0.2s;user-select:none;position:relative;z-index:2}
+.cfg-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);cursor:pointer;margin:0 auto 16px;max-width:580px;transition:border-radius 0.2s,border-color 0.2s;user-select:none;position:relative;z-index:2}
 .cfg-bar:hover{border-color:var(--acc2);background:var(--bg3)}
-.cfg-bar.open{border-radius:var(--r) var(--r) 0 0;border-bottom-color:transparent;margin-bottom:0}
+.cfg-bar.open{border-radius:var(--r) var(--r) 0 0;border-bottom-color:var(--bg2);margin-bottom:0}
 .cfg-bar-summary{display:flex;align-items:center;gap:8px}
 .cfg-bar-icon{font-size:1em;color:var(--tx3)}
 .cfg-bar-label{font-size:0.78em;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:0.5px}
 .cfg-bar-vals{font-size:0.82em;color:var(--tx2);font-weight:500}
 .cfg-bar-arrow{font-size:0.8em;color:var(--tx3);transition:transform 0.25s}
 .cfg-bar.open .cfg-bar-arrow{transform:rotate(180deg)}
-.cfg-draw{max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease,opacity 0.25s;opacity:0;padding:0 16px;max-width:580px;margin:0 auto 16px;background:var(--bg2);border:1px solid transparent;border-top:none;border-radius:0 0 var(--r) var(--r)}
-.cfg-draw.open{max-height:400px;padding:16px;opacity:1;border-color:var(--brd)}
+.cfg-draw{display:none;padding:16px;max-width:580px;margin:0 auto 16px;background:var(--bg2);border:1px solid var(--brd);border-top:none;border-radius:0 0 var(--r) var(--r);box-sizing:border-box}
+.cfg-draw.open{display:block}
 .cfg-g{margin-bottom:14px}
 .cfg-g:last-child{margin-bottom:0}
 .cfg-g label{display:block;font-size:0.78em;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
-.cfg-opts{display:flex;gap:8px;flex-wrap:wrap}
-.cfg-o{flex:1;min-width:0;padding:9px 8px;border:1.5px solid var(--brd);background:transparent;color:var(--tx2);border-radius:var(--rs);cursor:pointer;font-size:0.82em;font-weight:600;text-align:center;transition:all 0.2s;white-space:nowrap}
+.cfg-opts{display:flex;gap:8px}
+.cfg-o{flex:1;min-width:120px;padding:9px 8px;border:1.5px solid var(--brd);background:transparent;color:var(--tx2);border-radius:var(--rs);cursor:pointer;font-size:0.82em;font-weight:600;text-align:center;transition:all 0.2s;white-space:nowrap;box-sizing:border-box}
 .cfg-o:hover{border-color:var(--acc);color:var(--tx)}
 .cfg-o.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
 
