@@ -29,22 +29,8 @@ header{text-align:center;padding:28px 0 18px;border-bottom:1px solid var(--brd)}
 header h1{font-size:1.5em;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px}
 header .sub{color:var(--tx3);font-size:0.78em;margin-top:4px}
 
-/* === CONFIG (single collapsible panel) === */
-.cfg-wrap{max-width:580px;margin:0 auto 16px;background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);box-sizing:border-box;overflow:hidden}
-.cfg-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;user-select:none}
-.cfg-hdr:hover{background:var(--bg3)}
-.cfg-hdr-left{display:flex;align-items:center;gap:8px}
-.cfg-hdr-icon{font-size:1em;color:var(--tx3)}
-.cfg-hdr-label{font-size:0.78em;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:0.5px}
-.cfg-hdr-vals{font-size:0.82em;color:var(--tx2);font-weight:500}
-.cfg-hdr-arrow{font-size:0.8em;color:var(--tx3);transition:transform 0.25s}
-.cfg-wrap.open .cfg-hdr-arrow{transform:rotate(180deg)}
-.cfg-body{display:none;padding:0 16px 16px;border-top:1px solid var(--brd)}
-.cfg-wrap.open .cfg-body{display:block}
-.cfg-g{margin-top:14px}
-.cfg-g label{display:block;font-size:0.78em;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
-.cfg-opts{display:flex;gap:8px}
-.cfg-o{flex:1;min-width:120px;padding:9px 8px;border:1.5px solid var(--brd);background:transparent;color:var(--tx2);border-radius:var(--rs);cursor:pointer;font-size:0.82em;font-weight:600;text-align:center;transition:all 0.2s;white-space:nowrap;box-sizing:border-box}
+/* === CONFIG OPTION BUTTONS (used by Phase F inline config) === */
+.cfg-o{padding:9px 8px;border:1.5px solid var(--brd);background:transparent;color:var(--tx2);border-radius:var(--rs);cursor:pointer;font-size:0.82em;font-weight:600;text-align:center;transition:all 0.2s;white-space:nowrap;box-sizing:border-box}
 .cfg-o:hover{border-color:var(--acc);color:var(--tx)}
 .cfg-o.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
 
@@ -331,9 +317,6 @@ header h1,h2,h3,.hc-title,.rti,.rsc,.qtm-n,.qcall-t{font-family:var(--f)}
   .sh{padding:0 12px}
   header{padding:18px 0 12px}
   header h1{font-size:1.15em}
-  .cfg-bar{margin-bottom:10px}
-  .cfg-draw.open{max-height:280px;padding:12px}
-  .cfg-opts{flex-direction:column;gap:6px}
   .hub{padding:24px 0}
   .hub-cards{grid-template-columns:1fr;gap:12px}
   .hub-card{padding:24px 18px}
@@ -452,35 +435,6 @@ header h1,h2,h3,.hc-title,.rti,.rsc,.qtm-n,.qcall-t{font-family:var(--f)}
 
 <!-- HUB (with inline config) -->
 <div id="V_hub" class="hub">
-  <!-- Collapsible Config -->
-  <div id="cfgWrap" class="cfg-wrap">
-    <div class="cfg-hdr" onclick="toggleCfg(event)">
-      <div class="cfg-hdr-left">
-        <span class="cfg-hdr-icon">&#9881;</span>
-        <span class="cfg-hdr-label">Settings</span>
-        <span class="cfg-hdr-vals" id="cfgVals">Simplified &middot; Learner</span>
-      </div>
-      <span class="cfg-hdr-arrow">&#9662;</span>
-    </div>
-    <div class="cfg-body">
-      <div class="cfg-g">
-        <label>Chinese Script</label>
-        <div class="cfg-opts">
-          <button class="cfg-o on" onclick="setC('sc','s',this)">&#31616;&#20307; Simplified</button>
-          <button class="cfg-o" onclick="setC('sc','t',this)">&#32321;&#39636; Traditional</button>
-        </div>
-      </div>
-      <div class="cfg-g">
-        <label>Training Mode</label>
-        <div class="cfg-opts">
-          <button class="cfg-o on" onclick="setC('mode','learner',this)">&#128218; Learner</button>
-          <button class="cfg-o" onclick="setC('mode','challenger',this)">&#9889; Challenger</button>
-        </div>
-        <div id="modeHint" style="font-size:0.72em;color:var(--tx3);margin-top:8px;text-align:center">Untimed &middot; Focus on accuracy &middot; Study at your own pace</div>
-      </div>
-    </div>
-  </div>
-
   <div class="hub-cards">
     <div class="hub-card learn-card" onclick="goLearn()">
       <span class="hc-icon">&#128218;</span>
@@ -4123,16 +4077,6 @@ function enterHub() {
   // Config is now inline on hub — just ensure hub visible
   document.getElementById('V_hub').classList.remove('hid');
   renderScenarios();
-}
-function toggleCfg(e) {
-  if(e.target.closest('.cfg-o')) return;
-  document.getElementById('cfgWrap').classList.toggle('open');
-}
-function updateCfgSummary() {
-  const scLabel = C.sc === 's' ? 'Simplified' : 'Traditional';
-  const modeLabel = C.mode === 'learner' ? 'Learner' : 'Challenger';
-  const el = document.getElementById('cfgVals');
-  if(el) el.textContent = scLabel + ' \u00B7 ' + modeLabel;
 }
 
 /* ===== NAVIGATION ===== */
