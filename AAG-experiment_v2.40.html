@@ -30,16 +30,17 @@ header h1{font-size:1.5em;font-weight:700;display:flex;align-items:center;justif
 header .sub{color:var(--tx3);font-size:0.78em;margin-top:4px}
 
 /* === CONFIG BAR (collapsible inline) === */
-.cfg-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);cursor:pointer;margin:0 auto 16px;max-width:580px;transition:all 0.2s;user-select:none}
+.cfg-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);cursor:pointer;margin:0 auto 0;max-width:580px;transition:all 0.2s;user-select:none;position:relative;z-index:2}
 .cfg-bar:hover{border-color:var(--acc2);background:var(--bg3)}
+.cfg-bar.open{border-radius:var(--r) var(--r) 0 0;border-bottom-color:transparent;margin-bottom:0}
 .cfg-bar-summary{display:flex;align-items:center;gap:8px}
 .cfg-bar-icon{font-size:1em;color:var(--tx3)}
 .cfg-bar-label{font-size:0.78em;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:0.5px}
 .cfg-bar-vals{font-size:0.82em;color:var(--tx2);font-weight:500}
 .cfg-bar-arrow{font-size:0.8em;color:var(--tx3);transition:transform 0.25s}
 .cfg-bar.open .cfg-bar-arrow{transform:rotate(180deg)}
-.cfg-draw{max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease,opacity 0.25s;opacity:0;padding:0 16px;max-width:580px;margin:0 auto;background:var(--bg2);border:1px solid transparent;border-radius:0 0 var(--r) var(--r);margin-top:-10px}
-.cfg-draw.open{max-height:260px;padding:16px;opacity:1;border-color:var(--brd);margin-bottom:12px}
+.cfg-draw{max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease,opacity 0.25s;opacity:0;padding:0 16px;max-width:580px;margin:0 auto 16px;background:var(--bg2);border:1px solid transparent;border-top:none;border-radius:0 0 var(--r) var(--r)}
+.cfg-draw.open{max-height:400px;padding:16px;opacity:1;border-color:var(--brd)}
 .cfg-g{margin-bottom:14px}
 .cfg-g:last-child{margin-bottom:0}
 .cfg-g label{display:block;font-size:0.78em;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
@@ -4182,14 +4183,14 @@ function diB(v){return v>=9?'bd-h':v>=7?'bd-m':v>=5?'bd-l':'bd-n'}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
 function cardH(t,rank) {
-  return `<div class="card" onclick="this.classList.toggle('open')">
+  return `<div class="card">
     <div class="cr">
       <div class="c-rk">#${rank}</div>
       <div class="c-m">
         <div class="c-t">${esc(t.term)}</div>
         <div class="c-ipa">/${esc(t.ipa)}/</div>
         <div class="c-cn">${esc(cn(t))}</div>
-        <div class="c-def">${esc(t.definition.slice(0,110))}${t.definition.length>110?'...':''}</div>
+        <div class="c-def">${esc(t.definition)}</div>
       </div>
       <div class="c-bg">
         <span class="bg ${mkB(t.mk)}">Usage ${t.mk}</span>
