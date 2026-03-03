@@ -241,6 +241,36 @@ header .sub{color:var(--tx3);font-size:0.78em;margin-top:4px}
 .qo.sr{border-color:var(--grn);background:var(--grn-bg);color:var(--grn);opacity:1}
 .qo.sr .qsent{color:var(--grn)}
 
+/* === Speech Interpreting === */
+.mic-btn{width:80px;height:80px;border-radius:50%;border:3px solid var(--acc);background:rgba(58,158,255,0.08);color:var(--acc);font-size:2em;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:18px auto;transition:all 0.3s;position:relative}
+.mic-btn:hover{background:rgba(58,158,255,0.18);transform:scale(1.05)}
+.mic-btn.recording{border-color:var(--red);color:var(--red);background:rgba(239,68,68,0.1);animation:mic-pulse 1.4s ease-in-out infinite}
+@keyframes mic-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.35)}50%{box-shadow:0 0 0 18px rgba(239,68,68,0)}}
+.live-transcript{min-height:52px;padding:14px;margin:10px 0;background:var(--bg);border:1px solid var(--brd);border-radius:var(--rs);font-size:0.95em;line-height:1.6;color:var(--tx);text-align:center;font-family:var(--f-body)}
+.live-transcript .interim{color:var(--tx3);font-style:italic}
+.live-transcript .transcript-placeholder{color:var(--tx3);font-size:0.85em}
+.speech-dir-badge{display:inline-block;padding:5px 14px;border-radius:var(--rs);font-size:0.78em;font-weight:700;letter-spacing:1px;margin-bottom:10px}
+.speech-dir-badge.en{background:rgba(58,158,255,0.12);color:var(--acc);border:1px solid rgba(58,158,255,0.25)}
+.speech-dir-badge.cn{background:rgba(245,158,11,0.12);color:var(--gld);border:1px solid rgba(245,158,11,0.25)}
+.tts-status{font-size:0.82em;color:var(--tx3);margin:8px 0;font-weight:600;min-height:1.4em}
+.speech-call{font-size:1.15em;line-height:1.7;color:var(--tx);margin:12px 0;padding:12px 16px;background:var(--bg);border-left:3px solid var(--acc);border-radius:0 var(--rs) var(--rs) 0}
+.speech-call .blanked{text-decoration:underline;text-underline-offset:3px;font-weight:700;color:var(--acc)}
+.sf-wrap{margin:16px 0;padding:18px;background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);text-align:left}
+.sf-score-big{text-align:center;font-size:3em;font-weight:800;margin:8px 0;animation:pop 0.5s ease-out}
+.sf-dims{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.sf-dim{padding:8px 10px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--brd)}
+.sf-dim-label{font-size:0.72em;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.sf-dim-bar{height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden}
+.sf-dim-fill{height:100%;border-radius:4px;transition:width 0.6s ease-out}
+.sf-dim-val{font-size:0.78em;font-weight:700;margin-top:3px;text-align:right}
+.sf-comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.sf-col h4{font-size:0.75em;text-transform:uppercase;letter-spacing:0.5px;color:var(--tx3);margin:0 0 6px}
+.sf-col p{font-size:0.88em;line-height:1.7;color:var(--tx);word-break:break-word}
+.tk-hit{background:rgba(34,197,94,0.15);color:var(--grn);padding:1px 3px;border-radius:3px}
+.tk-miss{background:rgba(239,68,68,0.15);color:var(--red);padding:1px 3px;border-radius:3px;text-decoration:line-through}
+.tk-extra{background:rgba(245,158,11,0.15);color:var(--gld);padding:1px 3px;border-radius:3px}
+.speech-fb-textarea{width:100%;min-height:60px;padding:10px;border:1px solid var(--brd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:0.95em;font-family:var(--f-body);resize:vertical}
+
 /* Results */
 .res{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:32px;max-width:740px;margin:0 auto;text-align:center;box-shadow:var(--sh)}
 .rsc{font-size:4.2em;font-weight:800;color:var(--acc);margin:16px 0;animation:pop 0.6s ease-out}
@@ -629,21 +659,21 @@ header h1,h2,h3,.hc-title,.rti,.rsc,.qtm-n,.qcall-t{font-family:var(--f)}
   <div id="qR" class="res hid"></div>
 </div>
 
-<!-- INTERPRET -->
+<!-- INTERPRET (Speech-Based) -->
 <div id="V_interp" class="hid">
   <button class="back" onclick="endInterp()">&#8592; Back</button>
   <div id="iI" class="qi">
-    <div class="qt" style="color:var(--red)">&#127908; Sentence-Level Interpreting</div>
+    <div class="qt" style="color:var(--red)">&#127908; Speech Interpreting</div>
     <div class="qp">
-      Real interpreting happens in <em>full sentences</em>. The call is a sentence. The answer choices are sentences.
-      One key term is <em>underlined</em>&mdash;choose the correct rendering from five options.<br>
-      <em>11 seconds. More context, more cognitive load, same pressure.</em>
+      Hear a legal sentence. <strong>Interpret it aloud</strong> in the target language.<br>
+      Your speech is transcribed and scored on <em>accuracy</em>, <em>completeness</em>, <em>grammar</em>, and <em>fluency</em>.<br>
+      <span id="speechSupportBadge" style="font-size:0.85em;margin-top:6px;display:inline-block"></span>
     </div>
     <div class="qsr">
       <label>Questions:</label>
-      <select id="iCt"><option value="25">25</option><option value="50">50</option><option value="100" selected>100</option></select>
+      <select id="iCt"><option value="10" selected>10</option><option value="25">25</option><option value="50">50</option></select>
     </div>
-    <button class="qgo rd" onclick="startQ('interp')">Begin Interpreting Drill</button>
+    <button class="qgo rd" onclick="startSpeechInterp()">Begin Interpreting</button>
   </div>
   <div id="iB" class="qb hid"></div>
   <div id="iR" class="res hid"></div>
@@ -7179,7 +7209,963 @@ const AAG_AUDIO = (function() {
   }
 })();
 
-console.log('[v2.39] All phases (B-F) loaded');
+/* === PHASE G: Speech-Based Interpreting Engine === */
+(function() {
+  'use strict';
+
+  // ───── Browser support check ─────
+  const SRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const hasSpeech = !!SRec;
+  const badge = document.getElementById('speechSupportBadge');
+  if (badge) {
+    badge.innerHTML = hasSpeech
+      ? '<span style="color:var(--grn)">✅ Speech recognition available</span>'
+      : '<span style="color:var(--gld)">⚠️ Speech not supported — text input fallback enabled</span>';
+  }
+
+  // ───── SpeechEngine class ─────
+  const SpeechEngine = {
+    recognition: null,
+    silenceTimer: null,
+    recording: false,
+    finalTranscript: '',
+    interimTranscript: '',
+    onInterim: null,
+    onFinal: null,
+    onError: null,
+
+    init: function(lang) {
+      if (!SRec) return;
+      this.destroy();
+      const rec = new SRec();
+      rec.lang = lang;
+      rec.interimResults = true;
+      rec.continuous = true;
+      rec.maxAlternatives = 1;
+      const self = this;
+
+      rec.onresult = function(e) {
+        self.interimTranscript = '';
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          if (e.results[i].isFinal) {
+            self.finalTranscript += e.results[i][0].transcript;
+          } else {
+            self.interimTranscript += e.results[i][0].transcript;
+          }
+        }
+        // Reset silence timer on any speech
+        if (self.silenceTimer) clearTimeout(self.silenceTimer);
+        self.silenceTimer = setTimeout(function() {
+          if (self.recording) self.stop();
+        }, 2500);
+
+        if (self.onInterim) self.onInterim(self.finalTranscript, self.interimTranscript);
+      };
+
+      rec.onerror = function(e) {
+        if (e.error === 'no-speech') return; // ignore — user hasn't started talking yet
+        if (e.error === 'not-allowed') {
+          if (self.onError) self.onError('mic-blocked');
+        } else if (e.error === 'network') {
+          if (self.onError) self.onError('network');
+        }
+      };
+
+      rec.onend = function() {
+        // Chrome kills recognition after pauses; auto-restart if still recording
+        if (self.recording) {
+          try { rec.start(); } catch(e) { /* already started */ }
+        }
+      };
+
+      this.recognition = rec;
+    },
+
+    start: function() {
+      if (!this.recognition) return false;
+      this.finalTranscript = '';
+      this.interimTranscript = '';
+      this.recording = true;
+      try { this.recognition.start(); } catch(e) { /* already started */ }
+      return true;
+    },
+
+    stop: function() {
+      this.recording = false;
+      if (this.silenceTimer) { clearTimeout(this.silenceTimer); this.silenceTimer = null; }
+      if (this.recognition) { try { this.recognition.stop(); } catch(e) {} }
+      if (this.onFinal) this.onFinal(this.finalTranscript.trim());
+    },
+
+    destroy: function() {
+      this.recording = false;
+      if (this.silenceTimer) { clearTimeout(this.silenceTimer); this.silenceTimer = null; }
+      if (this.recognition) {
+        try { this.recognition.abort(); } catch(e) {}
+        this.recognition = null;
+      }
+      this.finalTranscript = '';
+      this.interimTranscript = '';
+    },
+
+    // TTS: Read text aloud
+    speak: function(text, lang, onEnd) {
+      if (!window.speechSynthesis) { if (onEnd) onEnd(); return; }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = 0.92;
+      // Try to find best voice for language
+      const voices = window.speechSynthesis.getVoices();
+      const prefix = lang.split('-')[0];
+      const match = voices.find(function(v) { return v.lang.startsWith(prefix); });
+      if (match) u.voice = match;
+      u.onend = function() { if (onEnd) onEnd(); };
+      u.onerror = function() { if (onEnd) onEnd(); };
+      // Chrome workaround: voices may load async
+      if (voices.length === 0) {
+        window.speechSynthesis.onvoiceschanged = function() {
+          const v2 = window.speechSynthesis.getVoices();
+          const m2 = v2.find(function(v) { return v.lang.startsWith(prefix); });
+          if (m2) u.voice = m2;
+          window.speechSynthesis.speak(u);
+        };
+      } else {
+        window.speechSynthesis.speak(u);
+      }
+    }
+  };
+
+  // ───── Multi-Slot Compound Sentence Templates ─────
+  // tN = number of T[] vocab terms needed, lcN = number of LC[] concepts needed
+  var MTPL = [
+    // ── 2 terms + 1 LC ──
+    {tN:2,lcN:1,
+     en:"Mr. {name} was charged with {t1} and {t2} at the {court}, and the defense raised the issue of {lc1}.",
+     cn:"{name_cn}在{court_cn}被指控{t1_cn}和{t2_cn}，辩方提出了{lc1_cn}的问题。"},
+    {tN:2,lcN:1,
+     en:"During the hearing, Judge {judge} addressed {t1} and {t2}, ruling that {lc1} was applicable in this case.",
+     cn:"在听证中，{judge}法官审理了{t1_cn}和{t2_cn}，裁定{lc1_cn}适用于本案。"},
+    {tN:2,lcN:1,
+     en:"The attorney explained to {name} that the matter of {t1} could affect {t2}, particularly in light of {lc1}.",
+     cn:"律师向{name_cn}解释说，{t1_cn}的问题可能影响{t2_cn}，特别是考虑到{lc1_cn}。"},
+    {tN:2,lcN:1,
+     en:"The prosecution argued that {t1} and {t2} were both established by the evidence, and that {lc1} supported the charges.",
+     cn:"检方辩称{t1_cn}和{t2_cn}均已由证据证实，且{lc1_cn}支持该指控。"},
+    {tN:2,lcN:1,
+     en:"{name} appeared at the {court} for a proceeding involving {t1}, where the court also considered {t2} under the doctrine of {lc1}.",
+     cn:"{name_cn}在{court_cn}出庭参加涉及{t1_cn}的诉讼程序，法院还根据{lc1_cn}原则审议了{t2_cn}。"},
+    {tN:2,lcN:1,
+     en:"The judge informed {name} that {t1} carries serious consequences, including the possibility of {t2}, unless {lc1} provides a defense.",
+     cn:"法官告知{name_cn}，{t1_cn}会带来严重后果，包括{t2_cn}的可能性，除非{lc1_cn}构成抗辩理由。"},
+    {tN:2,lcN:1,
+     en:"At the {court}, counsel for both sides debated whether {t1} should be treated separately from {t2}, given the principles of {lc1}.",
+     cn:"在{court_cn}，双方律师就{t1_cn}是否应与{t2_cn}分开处理进行了辩论，基于{lc1_cn}的原则。"},
+    {tN:2,lcN:1,
+     en:"The court clerk processed the paperwork for {t1} while Judge {judge} discussed {t2} with both attorneys, referencing {lc1}.",
+     cn:"法院书记员处理{t1_cn}的文件，同时{judge}法官与双方律师讨论了{t2_cn}，引用了{lc1_cn}。"},
+    {tN:2,lcN:1,
+     en:"After reviewing the record, Judge {judge} determined that {t1} was properly handled but that {t2} required further examination under {lc1}.",
+     cn:"在审查记录后，{judge}法官认定{t1_cn}的处理是正确的，但{t2_cn}需要根据{lc1_cn}进一步审查。"},
+    {tN:2,lcN:1,
+     en:"{name} filed a petition regarding {t1} and {t2} with the {court}, arguing that {lc1} entitled the petitioner to relief.",
+     cn:"{name_cn}就{t1_cn}和{t2_cn}向{court_cn}提出了请愿书，辩称{lc1_cn}使申请人有权获得救济。"},
+    {tN:2,lcN:1,
+     en:"The mediator facilitated a discussion between the parties on {t1} and {t2}, noting that {lc1} could guide a fair resolution.",
+     cn:"调解员促进了双方就{t1_cn}和{t2_cn}的讨论，并指出{lc1_cn}可以指导公正的解决方案。"},
+    // ── 3 terms + 1 LC ──
+    {tN:3,lcN:1,
+     en:"{name} was indicted on charges of {t1} and {t2}, appeared for {t3} at the {court}, and the court considered {lc1} in its ruling.",
+     cn:"{name_cn}因{t1_cn}和{t2_cn}被起诉，在{court_cn}出庭参加{t3_cn}，法院在裁决中考虑了{lc1_cn}。"},
+    {tN:3,lcN:1,
+     en:"During the trial, the witness testified about {t1}, the expert addressed {t2}, and Judge {judge} instructed the jury on {t3} in accordance with {lc1}.",
+     cn:"在审判中，证人就{t1_cn}作证，专家论述了{t2_cn}，{judge}法官根据{lc1_cn}就{t3_cn}向陪审团作出指示。"},
+    {tN:3,lcN:1,
+     en:"Judge {judge} ruled on the admissibility of {t1}, addressed the motion regarding {t2}, and scheduled a hearing on {t3}, citing {lc1} as the governing standard.",
+     cn:"{judge}法官就{t1_cn}的可采纳性作出裁定，处理了关于{t2_cn}的动议，并安排了{t3_cn}的听证，援引{lc1_cn}作为适用标准。"},
+    {tN:3,lcN:1,
+     en:"The defense filed a motion challenging {t1} and {t2}, and requested that the court apply {lc1} before proceeding with the {t3}.",
+     cn:"辩方提出动议质疑{t1_cn}和{t2_cn}，并请求法院在进行{t3_cn}之前适用{lc1_cn}。"},
+    {tN:3,lcN:1,
+     en:"In the matter of {name} versus the State, the court examined {t1}, {t2}, and {t3}, and applied the standard set forth in {lc1}.",
+     cn:"在{name_cn}诉国家一案中，法院审查了{t1_cn}、{t2_cn}和{t3_cn}，并适用了{lc1_cn}所确立的标准。"},
+    // ── 2 terms + 2 LC ──
+    {tN:2,lcN:2,
+     en:"The appellate court examined {t1} and {t2} in the context of {lc1}, ultimately holding that {lc2} required a different outcome.",
+     cn:"上诉法院在{lc1_cn}的背景下审查了{t1_cn}和{t2_cn}，最终裁定{lc2_cn}要求不同的结果。"},
+    {tN:2,lcN:2,
+     en:"Counsel argued that {lc1} and {lc2} both supported dismissing the charges of {t1} and {t2} against {name}.",
+     cn:"律师辩称{lc1_cn}和{lc2_cn}都支持撤销对{name_cn}的{t1_cn}和{t2_cn}指控。"},
+    // ── 2 terms + 0 LC ──
+    {tN:2,lcN:0,
+     en:"The court ordered {name} to comply with all conditions related to {t1} and {t2} or face additional sanctions.",
+     cn:"法院命令{name_cn}遵守与{t1_cn}和{t2_cn}相关的所有条件，否则将面临额外制裁。"},
+    {tN:2,lcN:0,
+     en:"Judge {judge} explained to the jury that {t1} and {t2} are distinct legal matters with different standards of proof.",
+     cn:"{judge}法官向陪审团解释说，{t1_cn}和{t2_cn}是不同的法律事项，适用不同的证明标准。"},
+    {tN:2,lcN:0,
+     en:"{name} was advised by counsel that a resolution of {t1} could also affect the pending matter of {t2}.",
+     cn:"律师告知{name_cn}，{t1_cn}的解决也可能影响待审的{t2_cn}事项。"},
+    // ── 3 terms + 0 LC ──
+    {tN:3,lcN:0,
+     en:"At the {court}, the judge addressed {t1}, {t2}, and {t3} in a single hearing before issuing a final ruling.",
+     cn:"在{court_cn}，法官在一次听证中审理了{t1_cn}、{t2_cn}和{t3_cn}，然后作出最终裁决。"},
+    {tN:3,lcN:0,
+     en:"The prosecution requested that {name} be held accountable for {t1}, {t2}, and {t3} based on the evidence presented at the {court}.",
+     cn:"检方根据在{court_cn}提交的证据，要求{name_cn}对{t1_cn}、{t2_cn}和{t3_cn}承担责任。"},
+  ];
+
+  // Random flavor pools
+  var NAMES_POOL = [
+    {en:'Zhang Wei',s:'张伟',t:'張偉'},{en:'Li Ming',s:'李明',t:'李明'},
+    {en:'Wang Fang',s:'王芳',t:'王芳'},{en:'Chen Hao',s:'陈浩',t:'陳浩'},
+    {en:'Liu Yang',s:'刘洋',t:'劉洋'},{en:'Zhao Li',s:'赵丽',t:'趙麗'},
+    {en:'Huang Lei',s:'黄磊',t:'黃磊'},{en:'Wu Ting',s:'吴婷',t:'吳婷'},
+    {en:'Zhou Qiang',s:'周强',t:'周強'},{en:'Lin Zhi',s:'林志',t:'林志'},
+    {en:'Yang Fan',s:'杨帆',t:'楊帆'},{en:'He Jia',s:'何佳',t:'何佳'},
+    {en:'Zheng Tao',s:'郑涛',t:'鄭濤'},{en:'Ma Dan',s:'马丹',t:'馬丹'},
+    {en:'Sun Xia',s:'孙霞',t:'孫霞'}
+  ];
+  var COURTS_POOL = [
+    {en:'Los Angeles Superior Court',s:'洛杉矶高等法院',t:'洛杉磯高等法院'},
+    {en:'San Francisco District Court',s:'旧金山地区法院',t:'舊金山地區法院'},
+    {en:'Sacramento County Court',s:'萨克拉门托县法院',t:'薩克拉門托縣法院'},
+    {en:'Orange County Superior Court',s:'橙县高等法院',t:'橙縣高等法院'},
+    {en:'San Diego Municipal Court',s:'圣迭戈市立法院',t:'聖迭戈市立法院'},
+    {en:'Riverside Superior Court',s:'河滨县高等法院',t:'河濱縣高等法院'}
+  ];
+  var JUDGES_POOL = ['Martinez','Kim','Thompson','Chen','Williams','Rodriguez','Patel','Lee','Garcia','Nakamura'];
+
+  function randFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  // Build compound sentence from multiple terms + LC concepts
+  function buildCompoundSentence(tTerms, lcTerms) {
+    // Find compatible templates
+    var compatible = MTPL.filter(function(tpl) {
+      return tpl.tN <= tTerms.length && tpl.lcN <= lcTerms.length;
+    });
+    if (compatible.length === 0) {
+      // Fallback to single-term simple sentence
+      return getSentence(tTerms[0]);
+    }
+    // Prefer templates using MORE slots (richer sentences)
+    compatible.sort(function(a, b) { return (b.tN + b.lcN) - (a.tN + a.lcN); });
+    var topN = Math.min(6, compatible.length);
+    var tpl = compatible[Math.floor(Math.random() * topN)];
+
+    var nameObj = randFrom(NAMES_POOL);
+    var courtObj = randFrom(COURTS_POOL);
+    var judgeStr = randFrom(JUDGES_POOL);
+    var sc = C.sc; // 's' or 't'
+
+    var en = tpl.en;
+    var cnStr = tpl.cn;
+
+    // Fill name
+    en = en.replace(/\{name\}/g, nameObj.en);
+    cnStr = cnStr.replace(/\{name_cn\}/g, sc === 's' ? nameObj.s : nameObj.t);
+    // Fill court
+    en = en.replace(/\{court\}/g, courtObj.en);
+    cnStr = cnStr.replace(/\{court_cn\}/g, sc === 's' ? courtObj.s : courtObj.t);
+    // Fill judge
+    en = en.replace(/\{judge\}/g, judgeStr);
+    cnStr = cnStr.replace(/\{judge\}/g, judgeStr);
+    // Fill T[] term slots
+    for (var i = 0; i < tpl.tN; i++) {
+      var t = tTerms[i];
+      en = en.replace('{t' + (i + 1) + '}', t.term);
+      cnStr = cnStr.replace('{t' + (i + 1) + '_cn}', sc === 's' ? t.simplified : t.traditional);
+    }
+    // Fill LC[] concept slots
+    for (var i = 0; i < tpl.lcN; i++) {
+      var lc = lcTerms[i];
+      en = en.replace('{lc' + (i + 1) + '}', lc.term);
+      cnStr = cnStr.replace('{lc' + (i + 1) + '_cn}', sc === 's' ? lc.simplified : lc.traditional);
+    }
+    return { en: en, cn: cnStr };
+  }
+
+  // Simple common-sense validation
+  function validateSentence(en, cn) {
+    if (!en || !cn) return false;
+    // Check no unfilled placeholders remain
+    if (/\{[a-z_0-9]+\}/.test(en) || /\{[a-z_0-9]+\}/.test(cn)) return false;
+    // Length sanity: EN should be 10-80 words
+    var wc = en.split(/\s+/).length;
+    if (wc < 10 || wc > 80) return false;
+    return true;
+  }
+
+  // ───── NLP Tokenization ─────
+  const EN_STOP = new Set(['a','an','the','is','are','was','were','be','been','being',
+    'have','has','had','do','does','did','will','would','shall','should','may','might',
+    'can','could','must','of','in','to','for','with','on','at','by','from','as','into',
+    'through','during','before','after','above','below','between','under','and','but',
+    'or','nor','not','so','yet','both','either','neither','each','every','all','any',
+    'few','more','most','other','some','such','no','only','own','same','than','too',
+    'very','just','that','this','these','those','it','its','i','me','my','we','our',
+    'you','your','he','him','his','she','her','they','them','their','what','which',
+    'who','whom','whose','where','when','how','if','then','there','here']);
+
+  function tokenizeEn(text) {
+    return text.toLowerCase().replace(/[^a-z0-9'\s-]/g, '').split(/\s+/).filter(function(w) { return w.length > 0; });
+  }
+
+  function tokenizeCn(text) {
+    var chars = [];
+    for (var i = 0; i < text.length; i++) {
+      var c = text.charCodeAt(i);
+      if (c >= 0x4e00 && c <= 0x9fff) chars.push(text[i]);
+    }
+    return chars;
+  }
+
+  function contentWordsEn(tokens) {
+    return tokens.filter(function(w) { return !EN_STOP.has(w) && w.length > 1; });
+  }
+
+  // ───── NLP Scoring Functions ─────
+
+  // Accuracy: key term match (60%) + content word overlap (40%)
+  // allKeyTerms: [{en:[words], cn:[chars]}, ...] — all vocab + LC terms in this sentence
+  function scoreAccuracy(transcript, reference, allKeyTerms, isTargetCn) {
+    // Primary: presence of ALL key terms (averaged)
+    var termScores = allKeyTerms.map(function(kt) {
+      if (isTargetCn) {
+        var found = 0;
+        kt.cn.forEach(function(ch) { if (transcript.indexOf(ch) >= 0) found++; });
+        return kt.cn.length > 0 ? found / kt.cn.length : 0;
+      } else {
+        var tLower = transcript.toLowerCase();
+        var found = 0;
+        kt.en.forEach(function(w) { if (tLower.indexOf(w) >= 0) found++; });
+        return kt.en.length > 0 ? found / kt.en.length : 0;
+      }
+    });
+    var primary = termScores.length > 0
+      ? termScores.reduce(function(s, v) { return s + v; }, 0) / termScores.length
+      : 0;
+
+    // Secondary: content word overlap (40%)
+    var secondary = 0;
+    if (isTargetCn) {
+      var tTok = tokenizeCn(transcript);
+      var rTok = tokenizeCn(reference);
+      if (rTok.length > 0) {
+        var rSet = new Set(rTok);
+        var hits = tTok.filter(function(c) { return rSet.has(c); }).length;
+        secondary = Math.min(1, hits / rTok.length);
+      }
+    } else {
+      var tCont = contentWordsEn(tokenizeEn(transcript));
+      var rCont = contentWordsEn(tokenizeEn(reference));
+      if (rCont.length > 0) {
+        var rSet = new Set(rCont);
+        var hits = tCont.filter(function(w) { return rSet.has(w); }).length;
+        secondary = Math.min(1, hits / rCont.length);
+      }
+    }
+
+    return 0.6 * primary + 0.4 * secondary;
+  }
+
+  // Completeness: weighted recall + Jaccard
+  function scoreCompleteness(transcript, reference, isTargetCn) {
+    var tTok, rTok;
+    if (isTargetCn) {
+      tTok = tokenizeCn(transcript);
+      rTok = tokenizeCn(reference);
+    } else {
+      tTok = tokenizeEn(transcript);
+      rTok = tokenizeEn(reference);
+    }
+    if (rTok.length === 0) return 1;
+
+    var tSet = new Set(tTok);
+    var rSet = new Set(rTok);
+    var intersection = 0;
+    rSet.forEach(function(w) { if (tSet.has(w)) intersection++; });
+    var union = new Set([].concat(tTok, rTok)).size;
+
+    var recall = intersection / rSet.size;
+    var jaccard = union > 0 ? intersection / union : 0;
+    return 0.6 * recall + 0.4 * jaccard;
+  }
+
+  // Grammar: heuristic checks
+  function scoreGrammar(transcript, isTargetCn) {
+    var score = 1.0;
+    if (isTargetCn) {
+      var chars = tokenizeCn(transcript);
+      // Very short → penalty
+      if (chars.length < 3) score -= 0.4;
+      // Check for common particles (的/了/在/被/是/和)
+      var particles = ['的','了','在','被','是','和','将','对','与','把'];
+      var hasParticle = particles.some(function(p) { return transcript.indexOf(p) >= 0; });
+      if (!hasParticle && chars.length > 5) score -= 0.15;
+    } else {
+      var words = tokenizeEn(transcript);
+      if (words.length < 3) score -= 0.4;
+      // Simple subject-verb agreement checks
+      var svErrors = [/\b(he|she|it) (have|are|were)\b/i, /\b(they|we|i) (has|is|was)\b/i];
+      svErrors.forEach(function(re) { if (re.test(transcript)) score -= 0.1; });
+      // Missing articles before common nouns (rough heuristic)
+      if (words.length > 5 && !/\b(a|an|the)\b/i.test(transcript)) score -= 0.08;
+    }
+    return Math.max(0, Math.min(1, score));
+  }
+
+  // Fluency: naturalness
+  function scoreFluency(transcript, reference, isTargetCn) {
+    var score = 1.0;
+    var tLen, rLen;
+    if (isTargetCn) {
+      tLen = tokenizeCn(transcript).length;
+      rLen = tokenizeCn(reference).length;
+    } else {
+      tLen = tokenizeEn(transcript).length;
+      rLen = tokenizeEn(reference).length;
+    }
+
+    // Length ratio deviation
+    if (rLen > 0) {
+      var ratio = tLen / rLen;
+      if (ratio < 0.4) score -= 0.35;
+      else if (ratio < 0.7) score -= 0.15;
+      else if (ratio > 2.0) score -= 0.25;
+      else if (ratio > 1.3) score -= 0.1;
+    }
+
+    // Repeated words/chars detection (false starts)
+    if (isTargetCn) {
+      for (var i = 0; i < transcript.length - 2; i++) {
+        if (transcript[i] === transcript[i+1] && transcript[i] === transcript[i+2]) {
+          score -= 0.1; break;
+        }
+      }
+    } else {
+      var words = tokenizeEn(transcript);
+      for (var i = 0; i < words.length - 1; i++) {
+        if (words[i] === words[i+1] && words[i].length > 2) { score -= 0.1; break; }
+      }
+    }
+
+    return Math.max(0, Math.min(1, score));
+  }
+
+  // Composite scorer — allKeyTerms is array of {en:[words], cn:[chars]}
+  function scoreSpeechAnswer(transcript, reference, allKeyTerms, isTargetCn) {
+    if (!transcript || transcript.trim().length === 0) {
+      return { accuracy: 0, completeness: 0, grammar: 0, fluency: 0, composite: 0 };
+    }
+    var acc = scoreAccuracy(transcript, reference, allKeyTerms, isTargetCn);
+    var comp = scoreCompleteness(transcript, reference, isTargetCn);
+    var gram = scoreGrammar(transcript, isTargetCn);
+    var flu = scoreFluency(transcript, reference, isTargetCn);
+    var composite = 0.40 * acc + 0.30 * comp + 0.15 * gram + 0.15 * flu;
+    return {
+      accuracy: Math.round(acc * 100),
+      completeness: Math.round(comp * 100),
+      grammar: Math.round(gram * 100),
+      fluency: Math.round(flu * 100),
+      composite: Math.round(composite * 100)
+    };
+  }
+
+  // ───── Token comparison for color-coded feedback ─────
+  function buildTokenComparison(transcript, reference, isTargetCn) {
+    var tTok, rTok;
+    if (isTargetCn) {
+      tTok = tokenizeCn(transcript);
+      rTok = tokenizeCn(reference);
+    } else {
+      tTok = tokenizeEn(transcript);
+      rTok = tokenizeEn(reference);
+    }
+    var rSet = new Set(rTok);
+    var tSet = new Set(tTok);
+
+    // Reference with hits/misses
+    var refHTML = rTok.map(function(w) {
+      return tSet.has(w)
+        ? '<span class="tk-hit">' + esc(w) + '</span>'
+        : '<span class="tk-miss">' + esc(w) + '</span>';
+    }).join(isTargetCn ? '' : ' ');
+
+    // Transcript with hits/extras
+    var transHTML = tTok.map(function(w) {
+      return rSet.has(w)
+        ? '<span class="tk-hit">' + esc(w) + '</span>'
+        : '<span class="tk-extra">' + esc(w) + '</span>';
+    }).join(isTargetCn ? '' : ' ');
+
+    return { refHTML: refHTML, transHTML: transHTML };
+  }
+
+  // ───── Speech Interp State ─────
+  var SQ = null; // Speech question state (parallel to Q but dedicated)
+
+  // ───── startSpeechInterp() ─────
+  window.startSpeechInterp = function() {
+    var count = parseInt(document.getElementById('iCt').value);
+    var AT = [].concat(T, EV.map(function(e) { return Object.assign({}, e, {ipa:''}); }))
+               .filter(function(t) { return !/[\u4e00-\u9fff]/.test(t.term); });
+    var collisionMap = buildCollisionMap(AT);
+
+    // Need ~3 T-terms per question + buffer
+    var tPoolSize = Math.min(count * 3 + 10, AT.length);
+    var tPool = stratifiedSelect(AT, tPoolSize, collisionMap);
+    // Shuffle LC pool for random concept selection
+    var lcPool = shuffle([].concat(LC));
+    var lcIdx = 0;
+    var tIdx = 0;
+
+    var questions = [];
+    for (var qi = 0; qi < count; qi++) {
+      // Pick 2-3 T[] terms per question
+      var numT = Math.random() < 0.4 ? 3 : 2;
+      var qTerms = [];
+      for (var ti = 0; ti < numT && tIdx < tPool.length; ti++) {
+        qTerms.push(tPool[tIdx++]);
+      }
+      if (qTerms.length < 2 && tIdx < tPool.length) qTerms.push(tPool[tIdx++]);
+      if (qTerms.length < 2) break; // ran out of terms
+
+      // Pick 1-2 LC[] concepts per question
+      var numLC = Math.random() < 0.3 ? 2 : 1;
+      var qLCs = [];
+      for (var li = 0; li < numLC; li++) {
+        if (lcIdx >= lcPool.length) lcIdx = 0; // wrap
+        qLCs.push(lcPool[lcIdx++]);
+      }
+
+      // Build compound sentence with multiple terms
+      var sentence = buildCompoundSentence(qTerms, qLCs);
+      // Validate — retry once with different template if needed
+      if (!validateSentence(sentence.en, sentence.cn)) {
+        sentence = buildCompoundSentence(qTerms, qLCs);
+      }
+
+      var dir = C.dir;
+      if (dir === 'bi') dir = Math.random() < 0.5 ? 'en' : 'cn';
+
+      var callLang, callText, refAnswer, isTargetCn;
+      if (dir === 'en') {
+        callLang = 'en-US';
+        callText = sentence.en;
+        refAnswer = sentence.cn;
+        isTargetCn = true;
+      } else {
+        callLang = C.sc === 's' ? 'zh-CN' : 'zh-TW';
+        callText = sentence.cn;
+        refAnswer = sentence.en;
+        isTargetCn = false;
+      }
+
+      // Collect ALL key terms for scoring (T[] + LC[])
+      var allKeyTerms = [];
+      qTerms.forEach(function(t) {
+        allKeyTerms.push({
+          en: t.term.toLowerCase().split(/\s+/),
+          cn: (C.sc === 's' ? t.simplified : t.traditional).split('')
+                .filter(function(c) { return c.charCodeAt(0) >= 0x4e00; })
+        });
+      });
+      qLCs.forEach(function(lc) {
+        allKeyTerms.push({
+          en: lc.term.toLowerCase().split(/\s+/),
+          cn: (C.sc === 's' ? lc.simplified : lc.traditional).split('')
+                .filter(function(c) { return c.charCodeAt(0) >= 0x4e00; })
+        });
+      });
+
+      questions.push({
+        terms: qTerms,
+        lcTerms: qLCs,
+        sentence: sentence,
+        dir: dir,
+        callLang: callLang,
+        callText: callText,
+        refAnswer: refAnswer,
+        isTargetCn: isTargetCn,
+        allKeyTerms: allKeyTerms
+      });
+    }
+
+    SQ = {
+      questions: questions,
+      idx: 0,
+      answers: [],
+      total: questions.length
+    };
+
+    document.getElementById('iI').classList.add('hid');
+    document.getElementById('iR').classList.add('hid');
+    document.getElementById('iB').classList.remove('hid');
+    showSpeechQ();
+  };
+
+  // ───── showSpeechQ() ─────
+  function showSpeechQ() {
+    var q = SQ.questions[SQ.idx];
+    var total = SQ.total;
+    var num = SQ.idx + 1;
+    var pct = Math.round(num / total * 100);
+
+    // Direction label
+    var dirLabel = q.dir === 'en' ? 'EN → CN' : 'CN → EN';
+    var dirClass = q.dir === 'en' ? 'en' : 'cn';
+
+    // Timer info
+    var timerHTML = '';
+    if (C.mode === 'challenger') {
+      timerHTML = '<div class="qtm"><span id="tN" class="qtm-n ok">20.0</span><div class="qtm-bar"><div id="tB" class="qtm-fill" style="width:100%"></div></div></div>';
+    } else {
+      timerHTML = '<div style="font-size:0.78em;color:var(--tx3);margin:4px 0">📖 Learner mode — take your time</div>';
+    }
+
+    // Highlight ALL key terms in call text (vocab + LC)
+    var callHTML = q.callText;
+    var allTermObjs = [].concat(q.terms, q.lcTerms);
+    allTermObjs.forEach(function(t) {
+      if (q.dir === 'en') {
+        var re = new RegExp('(' + t.term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        callHTML = callHTML.replace(re, '<span class="blanked">$1</span>');
+      } else {
+        var cnT = C.sc === 's' ? t.simplified : t.traditional;
+        if (cnT && callHTML.indexOf(cnT) >= 0) {
+          callHTML = callHTML.replace(cnT, '<span class="blanked">' + cnT + '</span>');
+        }
+      }
+    });
+
+    var isFallback = !hasSpeech;
+    var micHTML = isFallback
+      ? '<textarea id="speechFallbackTA" class="speech-fb-textarea" placeholder="Type your interpretation here..."></textarea>' +
+        '<button class="qgo" id="speechSubmitBtn" style="margin-top:8px" onclick="window._submitSpeechFallback()">Submit Answer</button>'
+      : '<button class="mic-btn" id="micBtn" onclick="window._toggleMic()">🎤</button>';
+
+    document.getElementById('iB').innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
+        '<span class="speech-dir-badge ' + dirClass + '">' + dirLabel + '</span>' +
+        '<span style="font-size:0.82em;color:var(--tx3)">' + num + ' / ' + total + '</span>' +
+      '</div>' +
+      '<div style="background:var(--bg);border-radius:var(--rs);height:5px;margin-bottom:12px;overflow:hidden">' +
+        '<div style="height:100%;width:' + pct + '%;background:var(--acc);transition:width 0.3s"></div>' +
+      '</div>' +
+      timerHTML +
+      '<div id="ttsStatus" class="tts-status">🔊 Reading sentence...</div>' +
+      '<div class="speech-call">' + callHTML + '</div>' +
+      '<div id="micArea" style="opacity:0.3;pointer-events:none;transition:opacity 0.3s">' +
+        micHTML +
+        '<div id="liveTranscript" class="live-transcript">' +
+          '<span class="transcript-placeholder">Your interpretation will appear here...</span>' +
+        '</div>' +
+      '</div>' +
+      '<div id="speechFeedback"></div>';
+
+    // Record start time
+    SQ.qStart = Date.now();
+
+    // Start timer for challenger mode
+    if (C.mode === 'challenger') {
+      // Reuse Q object temporarily for timer system
+      if (!Q) Q = {};
+      Q.timeLeft = 20;
+      Q.timeLimit = 20;
+      Q.timer = null;
+      Q.locked = false;
+      Q.mode = 'interp';
+    }
+
+    // Use TTS to read the call sentence, then enable mic
+    var ttsLang = q.callLang;
+    var ttsEl = document.getElementById('ttsStatus');
+    SpeechEngine.speak(q.callText, ttsLang, function() {
+      if (ttsEl) ttsEl.innerHTML = '🎙 <strong>Your turn — interpret now!</strong>';
+      enableMicArea();
+      if (C.mode === 'challenger') startTimer();
+    });
+  }
+
+  function enableMicArea() {
+    var area = document.getElementById('micArea');
+    if (area) { area.style.opacity = '1'; area.style.pointerEvents = 'auto'; }
+  }
+
+  // ───── Mic toggle (for non-fallback) ─────
+  window._toggleMic = function() {
+    var btn = document.getElementById('micBtn');
+    if (!btn) return;
+
+    if (SpeechEngine.recording) {
+      SpeechEngine.stop();
+      btn.classList.remove('recording');
+      btn.textContent = '🎤';
+    } else {
+      var q = SQ.questions[SQ.idx];
+      var recLang = q.isTargetCn ? (C.sc === 's' ? 'zh-CN' : 'zh-TW') : 'en-US';
+      SpeechEngine.init(recLang);
+
+      SpeechEngine.onInterim = function(final, interim) {
+        var el = document.getElementById('liveTranscript');
+        if (!el) return;
+        el.innerHTML = (final ? esc(final) : '') +
+          (interim ? ' <span class="interim">' + esc(interim) + '</span>' : '');
+        if (!final && !interim) {
+          el.innerHTML = '<span class="transcript-placeholder">Listening...</span>';
+        }
+      };
+
+      SpeechEngine.onFinal = function(transcript) {
+        btn.classList.remove('recording');
+        btn.textContent = '🎤';
+        processAnswer(transcript);
+      };
+
+      SpeechEngine.onError = function(type) {
+        if (type === 'mic-blocked') {
+          var el = document.getElementById('liveTranscript');
+          if (el) el.innerHTML = '<span style="color:var(--red)">⚠️ Microphone access denied. Please allow mic access and try again.</span>';
+          btn.classList.remove('recording');
+          btn.textContent = '🎤';
+        }
+      };
+
+      if (SpeechEngine.start()) {
+        btn.classList.add('recording');
+        btn.textContent = '⏹';
+        document.getElementById('liveTranscript').innerHTML = '<span class="transcript-placeholder">Listening...</span>';
+      }
+    }
+  };
+
+  // ───── Text fallback submit ─────
+  window._submitSpeechFallback = function() {
+    var ta = document.getElementById('speechFallbackTA');
+    if (!ta) return;
+    var text = ta.value.trim();
+    if (!text) return;
+    ta.disabled = true;
+    var btn = document.getElementById('speechSubmitBtn');
+    if (btn) btn.disabled = true;
+    processAnswer(text);
+  };
+
+  // ───── Process answer (from mic or text) ─────
+  function processAnswer(transcript) {
+    // Stop timer
+    if (Q && Q.timer) { clearInterval(Q.timer); Q.timer = null; }
+
+    var q = SQ.questions[SQ.idx];
+    var elapsed = (Date.now() - SQ.qStart) / 1000;
+
+    // Score
+    var scores = scoreSpeechAnswer(transcript, q.refAnswer, q.allKeyTerms, q.isTargetCn);
+
+    // Store answer
+    SQ.answers.push({
+      transcript: transcript,
+      scores: scores,
+      time: elapsed,
+      termIds: q.terms.map(function(t){return t.id}).concat(q.lcTerms.map(function(lc){return lc.id}))
+    });
+
+    // Disable mic area
+    var micArea = document.getElementById('micArea');
+    if (micArea) micArea.style.pointerEvents = 'none';
+
+    // Show feedback
+    showSpeechFeedback(scores, transcript, q);
+  }
+
+  // ───── showSpeechFeedback() ─────
+  function showSpeechFeedback(scores, transcript, q) {
+    var dims = [
+      { label: 'Accuracy', value: scores.accuracy, color: 'var(--acc)' },
+      { label: 'Completeness', value: scores.completeness, color: 'var(--grn)' },
+      { label: 'Grammar', value: scores.grammar, color: 'var(--gld)' },
+      { label: 'Fluency', value: scores.fluency, color: '#a78bfa' }
+    ];
+
+    var scoreColor = scores.composite >= 70 ? 'var(--grn)' : scores.composite >= 40 ? 'var(--gld)' : 'var(--red)';
+
+    var dimsHTML = dims.map(function(d) {
+      var barColor = d.value >= 70 ? 'var(--grn)' : d.value >= 40 ? 'var(--gld)' : 'var(--red)';
+      return '<div class="sf-dim">' +
+        '<div class="sf-dim-label">' + d.label + '</div>' +
+        '<div class="sf-dim-bar"><div class="sf-dim-fill" style="width:' + d.value + '%;background:' + barColor + '"></div></div>' +
+        '<div class="sf-dim-val" style="color:' + barColor + '">' + d.value + '%</div>' +
+      '</div>';
+    }).join('');
+
+    // Token comparison
+    var comp = buildTokenComparison(transcript || '', q.refAnswer, q.isTargetCn);
+
+    var isLast = SQ.idx >= SQ.total - 1;
+    var nextLabel = isLast ? 'See Results →' : 'Next →';
+    var nextFn = isLast ? 'window._finishSpeech()' : 'window._nextSpeechQ()';
+
+    var fbEl = document.getElementById('speechFeedback');
+    if (fbEl) {
+      fbEl.innerHTML = '<div class="sf-wrap">' +
+        '<div class="sf-score-big" style="color:' + scoreColor + '">' + scores.composite + '</div>' +
+        '<div style="text-align:center;font-size:0.78em;color:var(--tx3);margin-bottom:10px">out of 100</div>' +
+        '<div class="sf-dims">' + dimsHTML + '</div>' +
+        '<div class="sf-comparison">' +
+          '<div class="sf-col"><h4>Your Answer</h4><p>' + (comp.transHTML || '<em style="color:var(--tx3)">No answer</em>') + '</p></div>' +
+          '<div class="sf-col"><h4>Reference</h4><p>' + comp.refHTML + '</p></div>' +
+        '</div>' +
+      '</div>' +
+      '<button class="qgo" style="margin-top:12px" onclick="' + nextFn + '">' + nextLabel + '</button>';
+    }
+  }
+
+  // ───── Next question ─────
+  window._nextSpeechQ = function() {
+    SQ.idx++;
+    SpeechEngine.destroy();
+    showSpeechQ();
+  };
+
+  // ───── Timer timeout handler for speech mode ─────
+  var _prevTimeout = timeout;
+  timeout = function() {
+    if (SQ && SQ.idx < SQ.total) {
+      // Speech mode timeout — auto-submit whatever we have
+      SpeechEngine.stop();
+      // Brief delay for final transcript
+      setTimeout(function() {
+        processAnswer(SpeechEngine.finalTranscript.trim());
+      }, 300);
+      return;
+    }
+    _prevTimeout();
+  };
+
+  // ───── finishSpeech() ─────
+  window._finishSpeech = function() {
+    SpeechEngine.destroy();
+    if (Q && Q.timer) { clearInterval(Q.timer); Q.timer = null; }
+
+    var total = SQ.total;
+    var composites = SQ.answers.map(function(a) { return a.scores.composite; });
+    var avgComposite = composites.reduce(function(s, v) { return s + v; }, 0) / total;
+
+    // Map to existing tier system (0-150 scale)
+    var accuracy = Math.round(avgComposite); // 0-100
+
+    // Swiftness: max(0, 12 - responseTime) averaged, scaled to 0-50
+    var swSum = 0;
+    SQ.answers.forEach(function(a) { swSum += Math.max(0, 12 - a.time); });
+    var avgSw = swSum / total;
+    var swScore = avgSw / 12 * 50;
+
+    // Consistency bonus (low variance → up to 10.5)
+    var mean = avgComposite;
+    var variance = composites.reduce(function(s, v) { return s + (v - mean) * (v - mean); }, 0) / total;
+    var stddev = Math.sqrt(variance);
+    var consistencyBonus = Math.max(0, 10.5 * (1 - stddev / 50));
+
+    var finalScore = Math.round((accuracy + swScore + consistencyBonus) * 10) / 10;
+    finalScore = Math.min(150, finalScore);
+
+    var tier = getTier(finalScore);
+
+    // Dimension averages for radar
+    var avgAcc = SQ.answers.reduce(function(s, a) { return s + a.scores.accuracy; }, 0) / total;
+    var avgComp = SQ.answers.reduce(function(s, a) { return s + a.scores.completeness; }, 0) / total;
+    var avgGram = SQ.answers.reduce(function(s, a) { return s + a.scores.grammar; }, 0) / total;
+    var avgFlu = SQ.answers.reduce(function(s, a) { return s + a.scores.fluency; }, 0) / total;
+    var avgTime = SQ.answers.reduce(function(s, a) { return s + a.time; }, 0) / total;
+    var speedScore = Math.max(0, Math.min(1, 1 - (avgTime / 20)));
+
+    var radarAxes = [
+      { label: 'Accuracy', value: avgAcc / 100 },
+      { label: 'Complete', value: avgComp / 100 },
+      { label: 'Grammar', value: avgGram / 100 },
+      { label: 'Fluency', value: avgFlu / 100 },
+      { label: 'Speed', value: speedScore },
+      { label: 'Consist.', value: Math.min(1, consistencyBonus / 10.5) }
+    ];
+
+    var radarSVG = drawRadar('radar', radarAxes, null, 1);
+
+    // Build low-score review
+    var lowAnswers = SQ.answers.map(function(a, i) { return { a: a, q: SQ.questions[i] }; })
+      .filter(function(x) { return x.a.scores.composite < 50; });
+
+    var reviewHTML = '';
+    if (lowAnswers.length > 0) {
+      reviewHTML = '<div class="rmis"><h4>Review Low Scores (' + lowAnswers.length + ')</h4>' +
+        lowAnswers.map(function(x) {
+          return '<div class="rmi">' +
+            '<div class="rmi-q" style="font-weight:700">' + x.q.terms.map(function(t){return esc(t.term)}).join(', ') + (x.q.lcTerms.length ? ' + ' + x.q.lcTerms.map(function(lc){return esc(lc.term)}).join(', ') : '') + '</div>' +
+            '<div class="rmi-a" style="color:var(--grn)">Reference: ' + esc(x.q.refAnswer) + '</div>' +
+            '<div class="rmi-y" style="color:var(--tx3)">Yours: ' + esc(x.a.transcript || '(no answer)') + ' — ' + x.a.scores.composite + '%</div>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+    }
+
+    // Recommendation
+    var recBrief = tier.brief;
+    var recHTML = '<div class="rrec"><div class="rrec-brief">' + recBrief + '</div>' +
+      '<div class="rrec-more" onclick="this.nextElementSibling.classList.toggle(\'open\');this.textContent=this.textContent===\'Tell me more\'?\'Show less\':\'Tell me more\'">Tell me more</div>' +
+      '<div class="rrec-detail">' + tier.detail + '</div></div>';
+
+    // Render results
+    document.getElementById('iB').classList.add('hid');
+    var rEl = document.getElementById('iR');
+    rEl.classList.remove('hid');
+    rEl.innerHTML =
+      '<h2 style="font-size:1em;color:var(--tx2);margin-bottom:6px">Speech Interpreting Complete</h2>' +
+      '<div class="rsc">' + finalScore + '</div>' +
+      '<div class="rti">' + tier.name + '</div>' +
+      '<div class="rgd">' +
+        '<div class="rc"><div class="rcl">Avg Score</div><div class="rcv">' + Math.round(avgComposite) + '%</div></div>' +
+        '<div class="rc"><div class="rcl">Avg Time</div><div class="rcv">' + avgTime.toFixed(1) + 's</div></div>' +
+        '<div class="rc"><div class="rcl">Consistency</div><div class="rcv">' + consistencyBonus.toFixed(1) + '</div></div>' +
+      '</div>' +
+      '<div class="radar-wrap"><h4>Performance Profile</h4>' + radarSVG + '</div>' +
+      recHTML +
+      reviewHTML +
+      '<button class="rty" onclick="window._retrySpeech()">Try Again</button>';
+
+    // Save session via Phase E persistence
+    if (window._saveSession) {
+      window._saveSession('interp', finalScore, Math.round(avgComposite), tier.name, total);
+    }
+
+    // Inject personal best + history
+    if (window._buildPersonalBestBadge && window._buildSessionHistory) {
+      var retryBtn = rEl.querySelector('.rty');
+      if (retryBtn) {
+        retryBtn.insertAdjacentHTML('beforebegin', window._buildPersonalBestBadge('interp'));
+        retryBtn.insertAdjacentHTML('afterend', window._buildSessionHistory());
+      }
+    }
+  };
+
+  // ───── Retry ─────
+  window._retrySpeech = function() {
+    SpeechEngine.destroy();
+    SQ = null;
+    goInterp();
+  };
+
+  // ───── Patch endInterp to clean up speech engine ─────
+  var _endInterp = endInterp;
+  endInterp = function() {
+    SpeechEngine.destroy();
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    SQ = null;
+    _endInterp();
+  };
+
+})();
+
+console.log('[v2.40] All phases (B-G) loaded — Speech Interpreting active');
 </script>
 </body>
 </html>
