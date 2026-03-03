@@ -667,6 +667,11 @@ header h1,h2,h3,.hc-title,.rti,.rsc,.qtm-n,.qcall-t{font-family:var(--f)}
     <div class="qp">
       Hear a legal sentence. <strong>Interpret it aloud</strong> in the target language.<br>
       Your speech is transcribed and scored on <em>accuracy</em>, <em>completeness</em>, <em>grammar</em>, and <em>fluency</em>.<br>
+      <span style="font-size:0.82em;color:var(--tx3);display:block;margin-top:8px;line-height:1.5">
+        &#128268; <strong>Tip:</strong> Recognition quality depends on your microphone, browser, and OS.
+        For best results use Chrome on desktop with a clear mic in a quiet environment.
+        If recognition is unreliable, use the text-input fallback.
+      </span>
       <span id="speechSupportBadge" style="font-size:0.85em;margin-top:6px;display:inline-block"></span>
     </div>
     <div class="qsr">
@@ -7338,81 +7343,84 @@ const AAG_AUDIO = (function() {
 
   // ───── Multi-Slot Compound Sentence Templates ─────
   // tN = number of T[] vocab terms needed, lcN = number of LC[] concepts needed
+  // Design: mostly pre-loaded courtroom content; only 1-2 variable slots per sentence
   var MTPL = [
-    // ── 2 terms + 1 LC ──
-    {tN:2,lcN:1,
-     en:"Mr. {name} was charged with {t1} and {t2} at the {court}, and the defense raised the issue of {lc1}.",
-     cn:"{name_cn}在{court_cn}被指控{t1_cn}和{t2_cn}，辩方提出了{lc1_cn}的问题。"},
-    {tN:2,lcN:1,
-     en:"During the hearing, Judge {judge} addressed {t1} and {t2}, ruling that {lc1} was applicable in this case.",
-     cn:"在听证中，{judge}法官审理了{t1_cn}和{t2_cn}，裁定{lc1_cn}适用于本案。"},
-    {tN:2,lcN:1,
-     en:"The attorney explained to {name} that the matter of {t1} could affect {t2}, particularly in light of {lc1}.",
-     cn:"律师向{name_cn}解释说，{t1_cn}的问题可能影响{t2_cn}，特别是考虑到{lc1_cn}。"},
-    {tN:2,lcN:1,
-     en:"The prosecution argued that {t1} and {t2} were both established by the evidence, and that {lc1} supported the charges.",
-     cn:"检方辩称{t1_cn}和{t2_cn}均已由证据证实，且{lc1_cn}支持该指控。"},
-    {tN:2,lcN:1,
-     en:"{name} appeared at the {court} for a proceeding involving {t1}, where the court also considered {t2} under the doctrine of {lc1}.",
-     cn:"{name_cn}在{court_cn}出庭参加涉及{t1_cn}的诉讼程序，法院还根据{lc1_cn}原则审议了{t2_cn}。"},
-    {tN:2,lcN:1,
-     en:"The judge informed {name} that {t1} carries serious consequences, including the possibility of {t2}, unless {lc1} provides a defense.",
-     cn:"法官告知{name_cn}，{t1_cn}会带来严重后果，包括{t2_cn}的可能性，除非{lc1_cn}构成抗辩理由。"},
-    {tN:2,lcN:1,
-     en:"At the {court}, counsel for both sides debated whether {t1} should be treated separately from {t2}, given the principles of {lc1}.",
-     cn:"在{court_cn}，双方律师就{t1_cn}是否应与{t2_cn}分开处理进行了辩论，基于{lc1_cn}的原则。"},
-    {tN:2,lcN:1,
-     en:"The court clerk processed the paperwork for {t1} while Judge {judge} discussed {t2} with both attorneys, referencing {lc1}.",
-     cn:"法院书记员处理{t1_cn}的文件，同时{judge}法官与双方律师讨论了{t2_cn}，引用了{lc1_cn}。"},
-    {tN:2,lcN:1,
-     en:"After reviewing the record, Judge {judge} determined that {t1} was properly handled but that {t2} required further examination under {lc1}.",
-     cn:"在审查记录后，{judge}法官认定{t1_cn}的处理是正确的，但{t2_cn}需要根据{lc1_cn}进一步审查。"},
-    {tN:2,lcN:1,
-     en:"{name} filed a petition regarding {t1} and {t2} with the {court}, arguing that {lc1} entitled the petitioner to relief.",
-     cn:"{name_cn}就{t1_cn}和{t2_cn}向{court_cn}提出了请愿书，辩称{lc1_cn}使申请人有权获得救济。"},
-    {tN:2,lcN:1,
-     en:"The mediator facilitated a discussion between the parties on {t1} and {t2}, noting that {lc1} could guide a fair resolution.",
-     cn:"调解员促进了双方就{t1_cn}和{t2_cn}的讨论，并指出{lc1_cn}可以指导公正的解决方案。"},
-    // ── 3 terms + 1 LC ──
-    {tN:3,lcN:1,
-     en:"{name} was indicted on charges of {t1} and {t2}, appeared for {t3} at the {court}, and the court considered {lc1} in its ruling.",
-     cn:"{name_cn}因{t1_cn}和{t2_cn}被起诉，在{court_cn}出庭参加{t3_cn}，法院在裁决中考虑了{lc1_cn}。"},
-    {tN:3,lcN:1,
-     en:"During the trial, the witness testified about {t1}, the expert addressed {t2}, and Judge {judge} instructed the jury on {t3} in accordance with {lc1}.",
-     cn:"在审判中，证人就{t1_cn}作证，专家论述了{t2_cn}，{judge}法官根据{lc1_cn}就{t3_cn}向陪审团作出指示。"},
-    {tN:3,lcN:1,
-     en:"Judge {judge} ruled on the admissibility of {t1}, addressed the motion regarding {t2}, and scheduled a hearing on {t3}, citing {lc1} as the governing standard.",
-     cn:"{judge}法官就{t1_cn}的可采纳性作出裁定，处理了关于{t2_cn}的动议，并安排了{t3_cn}的听证，援引{lc1_cn}作为适用标准。"},
-    {tN:3,lcN:1,
-     en:"The defense filed a motion challenging {t1} and {t2}, and requested that the court apply {lc1} before proceeding with the {t3}.",
-     cn:"辩方提出动议质疑{t1_cn}和{t2_cn}，并请求法院在进行{t3_cn}之前适用{lc1_cn}。"},
-    {tN:3,lcN:1,
-     en:"In the matter of {name} versus the State, the court examined {t1}, {t2}, and {t3}, and applied the standard set forth in {lc1}.",
-     cn:"在{name_cn}诉国家一案中，法院审查了{t1_cn}、{t2_cn}和{t3_cn}，并适用了{lc1_cn}所确立的标准。"},
-    // ── 2 terms + 2 LC ──
-    {tN:2,lcN:2,
-     en:"The appellate court examined {t1} and {t2} in the context of {lc1}, ultimately holding that {lc2} required a different outcome.",
-     cn:"上诉法院在{lc1_cn}的背景下审查了{t1_cn}和{t2_cn}，最终裁定{lc2_cn}要求不同的结果。"},
-    {tN:2,lcN:2,
-     en:"Counsel argued that {lc1} and {lc2} both supported dismissing the charges of {t1} and {t2} against {name}.",
-     cn:"律师辩称{lc1_cn}和{lc2_cn}都支持撤销对{name_cn}的{t1_cn}和{t2_cn}指控。"},
+    // ── 1 term + 0 LC (simplest — rich pre-loaded context) ──
+    {tN:1,lcN:0,
+     en:"The court has scheduled a hearing on the matter of {t1}. Mr. {name} is ordered to appear at the {court} on the assigned date with his attorney.",
+     cn:"法院已安排就{t1_cn}一事进行听证。{name_cn}被命令在指定日期携律师到{court_cn}出庭。"},
+    {tN:1,lcN:0,
+     en:"Judge {judge} reminded the jury that the burden of proof for {t1} rests with the prosecution and must be established beyond a reasonable doubt.",
+     cn:"{judge}法官提醒陪审团，{t1_cn}的举证责任在于检方，且必须排除合理怀疑。"},
+    {tN:1,lcN:0,
+     en:"The defense attorney filed a motion to dismiss the charge of {t1}, arguing that the evidence was insufficient to proceed to trial.",
+     cn:"辩护律师提出动议要求撤销{t1_cn}的指控，辩称证据不足以进行审判。"},
+    {tN:1,lcN:0,
+     en:"Ms. {name} entered a plea of not guilty to the charge of {t1} and was released on bail pending the next hearing at the {court}.",
+     cn:"{name_cn}对{t1_cn}的指控作了无罪答辩，并在{court_cn}下次听证之前获准保释。"},
+    {tN:1,lcN:0,
+     en:"The witness testified that she observed the incident involving {t1} on the evening of March fifteenth near the downtown area.",
+     cn:"证人作证称她于三月十五日傍晚在市中心附近目睹了涉及{t1_cn}的事件。"},
+    {tN:1,lcN:0,
+     en:"Following the investigation, the district attorney decided to file charges of {t1} against the defendant, Mr. {name}.",
+     cn:"经过调查，地区检察官决定对被告{name_cn}提起{t1_cn}的指控。"},
+    {tN:1,lcN:0,
+     en:"The court interpreter translated the judge's explanation of {t1} to ensure that the defendant fully understood the charges.",
+     cn:"法庭口译员翻译了法官对{t1_cn}的解释，以确保被告完全理解所受指控。"},
+    {tN:1,lcN:0,
+     en:"Judge {judge} sentenced the defendant to three years of probation for {t1} and ordered completion of a rehabilitation program.",
+     cn:"{judge}法官就{t1_cn}判处被告三年缓刑，并命令其完成一项康复计划。"},
+    // ── 1 term + 1 LC ──
+    {tN:1,lcN:1,
+     en:"The prosecution argued that the evidence of {t1} was admissible under the principle of {lc1}, and the judge agreed after reviewing the case law.",
+     cn:"检方辩称{t1_cn}的证据根据{lc1_cn}原则可以采纳，法官在审查判例法后表示同意。"},
+    {tN:1,lcN:1,
+     en:"Mr. {name} was informed by the court that {t1} could result in deportation, as {lc1} applies to non-citizen defendants in criminal cases.",
+     cn:"法院告知{name_cn}，{t1_cn}可能导致驱逐出境，因为{lc1_cn}适用于刑事案件中的非公民被告。"},
+    {tN:1,lcN:1,
+     en:"During the preliminary hearing, the magistrate found probable cause for {t1} and noted that {lc1} was relevant to the defendant's rights.",
+     cn:"在预审听证中，治安法官认定{t1_cn}存在合理根据，并指出{lc1_cn}与被告权利相关。"},
+    {tN:1,lcN:1,
+     en:"The appellate court reversed the conviction for {t1}, holding that {lc1} had been violated during the original trial proceedings.",
+     cn:"上诉法院推翻了{t1_cn}的定罪，裁定在原审程序中{lc1_cn}遭到了违反。"},
+    {tN:1,lcN:1,
+     en:"Counsel for the defense argued that the concept of {lc1} should prevent the introduction of evidence related to {t1} at trial.",
+     cn:"辩护律师辩称{lc1_cn}的概念应阻止在审判中引入与{t1_cn}相关的证据。"},
+    {tN:1,lcN:1,
+     en:"Judge {judge} instructed the jury on the legal standard for {t1} and explained how {lc1} affects the evaluation of the evidence.",
+     cn:"{judge}法官就{t1_cn}的法律标准向陪审团作出指示，并解释了{lc1_cn}如何影响证据评估。"},
+    {tN:1,lcN:1,
+     en:"The defendant's attorney at the {court} requested a continuance in the case involving {t1}, citing the need to research {lc1} more thoroughly.",
+     cn:"被告的律师在{court_cn}请求延期审理涉及{t1_cn}的案件，理由是需要更深入地研究{lc1_cn}。"},
+    {tN:1,lcN:1,
+     en:"After considering the testimony, the court ruled that {t1} was established and that {lc1} did not provide grounds for acquittal.",
+     cn:"在考虑证词后，法院裁定{t1_cn}已被确立，且{lc1_cn}不构成无罪释放的理由。"},
     // ── 2 terms + 0 LC ──
     {tN:2,lcN:0,
-     en:"The court ordered {name} to comply with all conditions related to {t1} and {t2} or face additional sanctions.",
-     cn:"法院命令{name_cn}遵守与{t1_cn}和{t2_cn}相关的所有条件，否则将面临额外制裁。"},
+     en:"Mr. {name} appeared at the {court} on charges of {t1} and {t2}. The judge set bail at fifty thousand dollars and scheduled a preliminary hearing.",
+     cn:"{name_cn}因{t1_cn}和{t2_cn}的指控在{court_cn}出庭。法官将保释金定为五万美元，并安排了预审听证。"},
     {tN:2,lcN:0,
-     en:"Judge {judge} explained to the jury that {t1} and {t2} are distinct legal matters with different standards of proof.",
-     cn:"{judge}法官向陪审团解释说，{t1_cn}和{t2_cn}是不同的法律事项，适用不同的证明标准。"},
+     en:"The district attorney offered a plea deal that would reduce the charge of {t1} to {t2}, provided the defendant agrees to cooperate with the ongoing investigation.",
+     cn:"地区检察官提出认罪协议，将{t1_cn}的指控减为{t2_cn}，条件是被告同意配合正在进行的调查。"},
     {tN:2,lcN:0,
-     en:"{name} was advised by counsel that a resolution of {t1} could also affect the pending matter of {t2}.",
-     cn:"律师告知{name_cn}，{t1_cn}的解决也可能影响待审的{t2_cn}事项。"},
-    // ── 3 terms + 0 LC ──
-    {tN:3,lcN:0,
-     en:"At the {court}, the judge addressed {t1}, {t2}, and {t3} in a single hearing before issuing a final ruling.",
-     cn:"在{court_cn}，法官在一次听证中审理了{t1_cn}、{t2_cn}和{t3_cn}，然后作出最终裁决。"},
-    {tN:3,lcN:0,
-     en:"The prosecution requested that {name} be held accountable for {t1}, {t2}, and {t3} based on the evidence presented at the {court}.",
-     cn:"检方根据在{court_cn}提交的证据，要求{name_cn}对{t1_cn}、{t2_cn}和{t3_cn}承担责任。"},
+     en:"Judge {judge} explained to the jury the distinction between {t1} and {t2}, emphasizing that each offense requires different elements of proof.",
+     cn:"{judge}法官向陪审团解释了{t1_cn}和{t2_cn}的区别，强调每项罪行需要不同的证明要素。"},
+    {tN:2,lcN:0,
+     en:"The police report documented both {t1} and {t2} occurring at the scene, and the detective testified to these findings before the grand jury.",
+     cn:"警方报告记录了现场发生的{t1_cn}和{t2_cn}，侦探在大陪审团面前就这些发现作证。"},
+    // ── 2 terms + 1 LC (hardest) ──
+    {tN:2,lcN:1,
+     en:"The defense filed a motion arguing that {lc1} required the court to suppress evidence of both {t1} and {t2} obtained during the search.",
+     cn:"辩方提出动议，辩称{lc1_cn}要求法院排除在搜查中获得的{t1_cn}和{t2_cn}的证据。"},
+    {tN:2,lcN:1,
+     en:"In the case of {name} at the {court}, the judge considered the charges of {t1} and {t2} in light of {lc1} before issuing the ruling.",
+     cn:"在{court_cn}审理{name_cn}一案时，法官在作出裁决前根据{lc1_cn}审议了{t1_cn}和{t2_cn}的指控。"},
+    {tN:2,lcN:1,
+     en:"The prosecutor presented evidence linking {t1} and {t2} to the defendant, and cited {lc1} as the legal basis for the charges filed against Ms. {name}.",
+     cn:"检察官提出了将{t1_cn}和{t2_cn}与被告联系起来的证据，并援引{lc1_cn}作为对{name_cn}提起指控的法律依据。"},
+    {tN:2,lcN:1,
+     en:"Judge {judge} ruled that the testimony regarding {t1} was relevant under {lc1}, but excluded evidence of {t2} as prejudicial to the defendant.",
+     cn:"{judge}法官裁定关于{t1_cn}的证词根据{lc1_cn}具有相关性，但排除了{t2_cn}的证据，认为其对被告有偏见性。"},
   ];
 
   // Random flavor pools
@@ -7526,10 +7534,11 @@ const AAG_AUDIO = (function() {
 
   // ───── NLP Scoring Functions ─────
 
-  // Accuracy: key term match (60%) + content word overlap (40%)
+  // Accuracy: key term presence (75%) + content word recall (25%)
   // allKeyTerms: [{en:[words], cn:[chars]}, ...] — all vocab + LC terms in this sentence
+  // Interpreters juggle sentence structure — score presence, not placement
   function scoreAccuracy(transcript, reference, allKeyTerms, isTargetCn) {
-    // Primary: presence of ALL key terms (averaged)
+    // Primary: presence of key terms — if a term's words/chars appear ANYWHERE, count it
     var termScores = allKeyTerms.map(function(kt) {
       if (isTargetCn) {
         var found = 0;
@@ -7545,8 +7554,11 @@ const AAG_AUDIO = (function() {
     var primary = termScores.length > 0
       ? termScores.reduce(function(s, v) { return s + v; }, 0) / termScores.length
       : 0;
+    // Bonus: if ALL terms scored ≥ 0.8, reward full presence
+    var allPresent = termScores.every(function(s) { return s >= 0.8; });
+    if (allPresent && termScores.length > 0) primary = Math.max(primary, 0.95);
 
-    // Secondary: content word overlap (40%)
+    // Secondary: content word recall (lenient — just checks how many ref words appear)
     var secondary = 0;
     if (isTargetCn) {
       var tTok = tokenizeCn(transcript);
@@ -7554,7 +7566,7 @@ const AAG_AUDIO = (function() {
       if (rTok.length > 0) {
         var rSet = new Set(rTok);
         var hits = tTok.filter(function(c) { return rSet.has(c); }).length;
-        secondary = Math.min(1, hits / rTok.length);
+        secondary = Math.min(1, hits / (rTok.length * 0.6)); // only need 60% of ref chars
       }
     } else {
       var tCont = contentWordsEn(tokenizeEn(transcript));
@@ -7562,14 +7574,14 @@ const AAG_AUDIO = (function() {
       if (rCont.length > 0) {
         var rSet = new Set(rCont);
         var hits = tCont.filter(function(w) { return rSet.has(w); }).length;
-        secondary = Math.min(1, hits / rCont.length);
+        secondary = Math.min(1, hits / (rCont.length * 0.6)); // only need 60% of ref words
       }
     }
 
-    return 0.6 * primary + 0.4 * secondary;
+    return 0.75 * primary + 0.25 * secondary;
   }
 
-  // Completeness: weighted recall + Jaccard
+  // Completeness: recall-focused — interpreters rephrase, so presence > exact overlap
   function scoreCompleteness(transcript, reference, isTargetCn) {
     var tTok, rTok;
     if (isTargetCn) {
@@ -7585,37 +7597,31 @@ const AAG_AUDIO = (function() {
     var rSet = new Set(rTok);
     var intersection = 0;
     rSet.forEach(function(w) { if (tSet.has(w)) intersection++; });
-    var union = new Set([].concat(tTok, rTok)).size;
 
     var recall = intersection / rSet.size;
-    var jaccard = union > 0 ? intersection / union : 0;
-    return 0.6 * recall + 0.4 * jaccard;
+    // Lenient: if recall > 0.35, apply a gentle curve that boosts mid-range scores
+    if (recall > 0.35) recall = 0.35 + (recall - 0.35) * 1.3;
+    return Math.min(1, 0.85 * recall + 0.15 * (tTok.length > 0 ? 1 : 0)); // small bonus for any attempt
   }
 
-  // Grammar: heuristic checks
+  // Grammar: light heuristic — interpreters restructure freely, only penalize clear errors
   function scoreGrammar(transcript, isTargetCn) {
     var score = 1.0;
     if (isTargetCn) {
       var chars = tokenizeCn(transcript);
-      // Very short → penalty
-      if (chars.length < 3) score -= 0.4;
-      // Check for common particles (的/了/在/被/是/和)
-      var particles = ['的','了','在','被','是','和','将','对','与','把'];
-      var hasParticle = particles.some(function(p) { return transcript.indexOf(p) >= 0; });
-      if (!hasParticle && chars.length > 5) score -= 0.15;
+      // Only penalize truly empty responses
+      if (chars.length < 2) score -= 0.3;
     } else {
       var words = tokenizeEn(transcript);
-      if (words.length < 3) score -= 0.4;
-      // Simple subject-verb agreement checks
+      if (words.length < 2) score -= 0.3;
+      // Only penalize clear subject-verb agreement errors (light penalty)
       var svErrors = [/\b(he|she|it) (have|are|were)\b/i, /\b(they|we|i) (has|is|was)\b/i];
-      svErrors.forEach(function(re) { if (re.test(transcript)) score -= 0.1; });
-      // Missing articles before common nouns (rough heuristic)
-      if (words.length > 5 && !/\b(a|an|the)\b/i.test(transcript)) score -= 0.08;
+      svErrors.forEach(function(re) { if (re.test(transcript)) score -= 0.05; });
     }
-    return Math.max(0, Math.min(1, score));
+    return Math.max(0.3, Math.min(1, score)); // floor at 0.3 — grammar is subjective
   }
 
-  // Fluency: naturalness
+  // Fluency: naturalness — generous; interpreters rephrase and restructure freely
   function scoreFluency(transcript, reference, isTargetCn) {
     var score = 1.0;
     var tLen, rLen;
@@ -7627,30 +7633,31 @@ const AAG_AUDIO = (function() {
       rLen = tokenizeEn(reference).length;
     }
 
-    // Length ratio deviation
+    // Length ratio — very wide tolerance (interpreters may be shorter or longer)
     if (rLen > 0) {
       var ratio = tLen / rLen;
-      if (ratio < 0.4) score -= 0.35;
-      else if (ratio < 0.7) score -= 0.15;
-      else if (ratio > 2.0) score -= 0.25;
-      else if (ratio > 1.3) score -= 0.1;
+      if (ratio < 0.25) score -= 0.2;       // extremely short
+      else if (ratio > 2.5) score -= 0.15;   // extremely long
+      // everything between 0.25–2.5x is fine — no penalty
     }
 
-    // Repeated words/chars detection (false starts)
+    // Repeated words/chars: ONLY penalize 3+ consecutive identical (not 2)
     if (isTargetCn) {
-      for (var i = 0; i < transcript.length - 2; i++) {
-        if (transcript[i] === transcript[i+1] && transcript[i] === transcript[i+2]) {
-          score -= 0.1; break;
-        }
+      var repCount = 1;
+      for (var i = 1; i < transcript.length; i++) {
+        if (transcript[i] === transcript[i-1]) { repCount++; } else { repCount = 1; }
+        if (repCount >= 4) { score -= 0.08; break; } // 4+ same char in a row
       }
     } else {
       var words = tokenizeEn(transcript);
-      for (var i = 0; i < words.length - 1; i++) {
-        if (words[i] === words[i+1] && words[i].length > 2) { score -= 0.1; break; }
+      var wRepCount = 1;
+      for (var i = 1; i < words.length; i++) {
+        if (words[i] === words[i-1] && words[i].length > 2) { wRepCount++; } else { wRepCount = 1; }
+        if (wRepCount >= 3) { score -= 0.08; break; } // 3+ same word in a row
       }
     }
 
-    return Math.max(0, Math.min(1, score));
+    return Math.max(0.3, Math.min(1, score)); // floor at 0.3
   }
 
   // Composite scorer — allKeyTerms is array of {en:[words], cn:[chars]}
@@ -7712,8 +7719,8 @@ const AAG_AUDIO = (function() {
                .filter(function(t) { return !/[\u4e00-\u9fff]/.test(t.term); });
     var collisionMap = buildCollisionMap(AT);
 
-    // Need ~3 T-terms per question + buffer
-    var tPoolSize = Math.min(count * 3 + 10, AT.length);
+    // Need ~2 T-terms per question + buffer
+    var tPoolSize = Math.min(count * 2 + 10, AT.length);
     var tPool = stratifiedSelect(AT, tPoolSize, collisionMap);
     // Shuffle LC pool for random concept selection
     var lcPool = shuffle([].concat(LC));
@@ -7722,17 +7729,16 @@ const AAG_AUDIO = (function() {
 
     var questions = [];
     for (var qi = 0; qi < count; qi++) {
-      // Pick 2-3 T[] terms per question
-      var numT = Math.random() < 0.4 ? 3 : 2;
+      // Pick 1-2 T[] terms per question (60% chance of 1, 40% chance of 2)
+      var numT = Math.random() < 0.6 ? 1 : 2;
       var qTerms = [];
       for (var ti = 0; ti < numT && tIdx < tPool.length; ti++) {
         qTerms.push(tPool[tIdx++]);
       }
-      if (qTerms.length < 2 && tIdx < tPool.length) qTerms.push(tPool[tIdx++]);
-      if (qTerms.length < 2) break; // ran out of terms
+      if (qTerms.length < 1) break; // ran out of terms
 
-      // Pick 1-2 LC[] concepts per question
-      var numLC = Math.random() < 0.3 ? 2 : 1;
+      // Pick 0-1 LC[] concepts per question (50/50)
+      var numLC = Math.random() < 0.5 ? 1 : 0;
       var qLCs = [];
       for (var li = 0; li < numLC; li++) {
         if (lcIdx >= lcPool.length) lcIdx = 0; // wrap
