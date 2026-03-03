@@ -374,9 +374,9 @@ header h1,h2,h3,.hc-title,.rti,.rsc,.qtm-n,.qcall-t{font-family:var(--f)}
 
 /* === AAG: Progressive Disclosure === */
 .card .c-bg{opacity:0;max-height:0;overflow:hidden;transition:opacity 0.2s,max-height 0.2s}
-.card.open .c-bg{opacity:1;max-height:50px}
+.card.open .c-bg{opacity:1;max-height:none}
 .card .c-def{opacity:0;max-height:0;overflow:hidden;transition:opacity 0.2s,max-height 0.2s}
-.card.open .c-def,.card:hover .c-def{opacity:1;max-height:100px}
+.card.open .c-def,.card:hover .c-def{opacity:1;max-height:none}
 
 /* === AAG: Streak Gamification === */
 @keyframes streak-pulse{0%{box-shadow:0 0 0 0 rgba(245,158,11,0.6)}50%{box-shadow:0 0 24px 8px rgba(245,158,11,0.3)}100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}}
@@ -5271,7 +5271,7 @@ function renderLCLearn() {
   const items = domFilter ? LC.filter(t=>t.domain===domFilter) : LC;
   list.innerHTML = items.map((t,i) => {
     const cnText = lcCn(t);
-    return `<div class="lc-learn-card" onclick="this.classList.toggle('open')">
+    return `<div class="lc-learn-card">
     <div class="lc-hdr"><span class="lc-term">${esc(t.term)}${cnText ? ' <span style="color:var(--teal);font-size:0.85em;font-family:var(--f-cn)">'+esc(cnText)+'</span>' : ''}</span><span class="lc-dom-tag">${esc(t.domain)}</span></div>
     <div class="lc-body">
       <div class="dl" style="color:var(--teal)">Legal Context</div>
@@ -5290,6 +5290,8 @@ function lcTab(id, el) {
   el.classList.add('on');
   document.getElementById('LP_'+id).classList.add('on');
   if(id==='lcd' && !document.getElementById('lcDomGrid').innerHTML) renderLCDomains();
+  if(id==='lcu') { document.getElementById('lcuMn').value='1'; document.getElementById('lcuMx').value='10'; rLCU(); }
+  if(id==='lcdi') { document.getElementById('lcdiMn').value='1'; document.getElementById('lcdiMx').value='10'; rLCD(); }
 }
 
 function renderLCDomains() {
@@ -5323,10 +5325,10 @@ function renderLCDomList() {
 
 function lcCardH(t, rank) {
   const cnText = lcCn(t);
-  return '<div class="lc-learn-card" onclick="this.classList.toggle(\'open\')">' +
+  return '<div class="lc-learn-card">' +
     '<div class="lc-hdr"><span class="lc-term">' + rank + '. ' + esc(t.term) + (cnText ? ' <span style="color:var(--teal);font-size:0.85em;font-family:var(--f-cn)">' + esc(cnText) + '</span>' : '') + '</span>' +
     '<span class="lc-dom-tag">' + esc(t.domain) + '</span>' +
-    '<span style="font-size:0.75em;color:var(--tx3);margin-left:6px">mk ' + t.mk + ' · idi ' + t.idi + '</span></div>' +
+    '</div>' +
     '<div class="lc-body">' +
       '<div class="dl" style="color:var(--teal)">Legal Context</div>' +
       '<div class="lc-def-text">' + esc(t.definition) + '</div>' +
@@ -5746,7 +5748,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Hub shows immediately — render scenarios on load
   renderScenarios();
   // Delegate .card clicks inside #uL, #dL, #sL
-  ['uL', 'dL', 'sL', 'omniResults', 'lcDomList', 'lcuL', 'lcdiL'].forEach(function(id) {
+  ['uL', 'dL', 'sL', 'omniResults', 'lcDomList', 'lcuL', 'lcdiL', 'lcLearnList'].forEach(function(id) {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('click', function(e) {
